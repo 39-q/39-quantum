@@ -13,7 +13,7 @@
         }
 
         body {
-            font-family: 'Inter', papyrus;
+            font-family: 'Inter', gothic;
             background: #ffffff;
             color: #1a1a1a;
             line-height: 1.5;
@@ -474,7 +474,7 @@
             <a data-nav="home">Papers</a>
             <a data-nav="about">About</a>
             <a data-nav="socials">Socials</a>
-            <button id="walletBtn" class="wallet-btn">🔗 Connect Wallet</button>
+            <button id="walletBtn" class="wallet-btn">Connect Wallet</button>
             <span id="walletStatusDisplay" class="wallet-status" style="display: none;">Connected</span>
         </div>
     </div>
@@ -484,11 +484,11 @@
     <!-- HOME PAGE -->
     <div id="homePage" class="page active-page">
         <div class="hero">
-            <div class="hero-badge">⚛️ Quantum Research DAO</div>
-            <h1>Publish. Verify. <span class="highlight">Fund.</span></h1>
-            <p>39 is a decentralized platform for quantum computing research. Upload your thesis, get an AI summary from Llama 3.2, and receive an immutable timestamp on Algorand.</p>
+            <div class="hero-badge">Quantum Research DAO</div>
+            <h1>Publish. Verify. Fund.</h1>
+            <p>39 is a decentralized platform for quantum computing research. Upload your thesis, get an AI summary , receive an immutable timestamp on Algorand and recieve funding from investors.</p>
             <div class="hero-meta">
-                <span>📄 Loading papers...</span>
+                <span>Loading papers...</span>
                 
                 
                 
@@ -496,8 +496,8 @@
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" data-tab="feed">📄 Quantum Papers</button>
-            <button class="tab-btn" data-tab="publish">✍️ Submit Thesis</button>
+            <button class="tab-btn active" data-tab="feed"> Research Papers</button>
+            <button class="tab-btn" data-tab="publish"> Submit Thesis</button>
         </div>
 
         <div id="feedTab">
@@ -508,8 +508,8 @@
 
         <div id="publishTab" style="display: none;">
             <div class="publish-card">
-                <h2>✍️ Submit Your Quantum Research</h2>
-                <p style="color: #6b7280; margin-bottom: 1.5rem;">Your thesis will be timestamped on Algorand and summarized by Llama 3.2 AI.</p>
+                <h2> Submit Your Quantum Research</h2>
+                <p style="color: #6b7280; margin-bottom: 1.5rem;">Your thesis will be timestamped on Algorand and summarized  AI.</p>
                 <form id="publishForm">
                     <div class="form-group">
                         <label>Thesis Title *</label>
@@ -521,7 +521,7 @@
                     </div>
                     <div class="form-group">
                         <label>Institution</label>
-                        <input type="text" id="institution" placeholder="e.g., MIT Quantum Research Lab">
+                        <input type="text" id="institution" placeholder="e.g., MIT Quantum Research Lab,Independent">
                     </div>
                     <div class="form-group">
                         <label>Abstract *</label>
@@ -531,7 +531,7 @@
                         <label>Funding URL (optional)</label>
                         <input type="url" id="fundingUrl" placeholder="https://gitcoin.co/grants/... or your funding page">
                     </div>
-                    <button type="submit" class="submit-btn">📅 Publish & Timestamp on Algorand</button>
+                    <button type="submit" class="submit-btn"> Publish & Timestamp on Algorand</button>
                 </form>
             </div>
         </div>
@@ -580,17 +580,17 @@
         <div class="socials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 2rem 0;">
             <a href="#" class="social-card" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 1rem; text-decoration: none; color: #111827;">
                 <span style="font-size: 2rem;">🐙</span>
-                <div><strong>GitHub</strong><div style="font-size: 0.75rem; color: #6b7280;">@39-quantum</div></div>
+                <div><strong>GitHub</strong><div style="font-size: 0.75rem; color: #6b7280;">@39-q</div></div>
             </a>
             <a href="#" class="social-card" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 1rem; text-decoration: none; color: #111827;">
                 <span style="font-size: 2rem;">🐦</span>
-                <div><strong>Twitter/X</strong><div style="font-size: 0.75rem; color: #6b7280;">@39Quantum</div></div>
+                <div><strong>Twitter/X</strong><div style="font-size: 0.75rem; color: #6b7280;">COMING SOON!</div></div>
             </a>
             <a href="#" class="social-card" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 1rem; text-decoration: none; color: #111827;">
                 
             <a href="#" class="social-card" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 1rem; text-decoration: none; color: #111827;">
                 <span style="font-size: 2rem;">📧</span>
-                <div><strong>Email</strong><div style="font-size: 0.75rem; color: #6b7280;">hello@39quantum.com</div></div>
+                <div><strong>Email</strong><div style="font-size: 0.75rem; color: #6b7280;">COMIN SOON!</div></div>
             </a>
         </div>
     </div>
@@ -645,8 +645,8 @@
                 <div class="research-title">${escapeHtml(paper.title)}</div>
                 <div class="research-authors">${paper.authors || 'Anonymous'} ${paper.institution ? `· ${paper.institution}` : ''}</div>
                 <div class="research-meta">
-                    📅 ${new Date(paper.timestamp).toLocaleDateString()}
-                    ${paper.views ? `· 👁️ ${paper.views} views` : ''}
+                     ${new Date(paper.timestamp).toLocaleDateString()}
+                    ${paper.views ? `·  ${paper.views} views` : ''}
                 </div>
                 <div class="research-abstract">${escapeHtml(paper.abstract?.substring(0, 300))}...</div>
                 <div class="ai-summary">
@@ -727,7 +727,7 @@
         };
         
         const btn = document.querySelector('.submit-btn');
-        btn.textContent = '⏳ Submitting & Timestamping...';
+        btn.textContent = 'Submitting & Timestamping...';
         btn.disabled = true;
         
         const success = await publishResearch(newPaper);
@@ -741,7 +741,7 @@
             alert('❌ Failed to publish');
         }
         
-        btn.textContent = '📅 Publish & Timestamp on Algorand';
+        btn.textContent = 'Publish & Timestamp on Algorand';
         btn.disabled = false;
     });
     
@@ -771,7 +771,7 @@
         if (pageId === 'about') {
             const timestamped = researchData.filter(p => p.algorandTimestamp?.txId).length;
             document.getElementById('statsPlaceholder').innerHTML = `
-                📄 ${researchData.length} total papers<br>
+                 ${researchData.length} total papers<br>
                 
              
                 
