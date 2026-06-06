@@ -600,9 +600,9 @@
     <div class="footer-links">
         <a data-nav="home">Papers</a>
         <a data-nav="about">About</a>
-        <a data-nav="socials">Socials</a>
+        
     </div>
-    <p>⚛️ 39 Quantum Research DAO · Llama 3.2 AI · Verified on Algorand</p>
+    <p>© 2026 39 Quantum. All rights reserved</p>
 </footer>
 
 <script>
@@ -636,7 +636,7 @@
         const feed = document.getElementById('researchFeed');
         
         if (researchData.length === 0) {
-            feed.innerHTML = '<div class="empty-state">✨ No quantum papers yet. Be the first to submit your research!</div>';
+            feed.innerHTML = '<div class="empty-state"> No quantum papers yet. Be the first to submit your research!</div>';
             return;
         }
         
@@ -650,16 +650,16 @@
                 </div>
                 <div class="research-abstract">${escapeHtml(paper.abstract?.substring(0, 300))}...</div>
                 <div class="ai-summary">
-                    <div class="ai-summary-label">🦙 Llama 3.2 AI Summary</div>
+                    <div class="ai-summary-label"> AI Summary</div>
                     <div>${escapeHtml(paper.aiSummary || 'Generating summary...')}</div>
                 </div>
                 ${paper.algorandTimestamp && paper.algorandTimestamp.txId ? `
                     <div class="timestamp-badge">
-                        🔗 ⛓️ Algorand Verified · 
+                         Algorand Verified · 
                         <a href="${paper.algorandTimestamp.blockExplorer}" target="_blank">View TX ➜</a>
                     </div>
                 ` : ''}
-                ${paper.fundingUrl ? `<a href="${paper.fundingUrl}" target="_blank" class="fund-link">💰 Fund This Research →</a>` : ''}
+                ${paper.fundingUrl ? `<a href="${paper.fundingUrl}" target="_blank" class="fund-link">Fund This Research →</a>` : ''}
             </div>
         `).join('');
     }
@@ -733,7 +733,7 @@
         const success = await publishResearch(newPaper);
         
         if (success) {
-            alert('✅ Thesis published! Timestamped on Algorand + summarized by Llama 3.2');
+            alert('Thesis published! Timestamped on Algorand');
             document.getElementById('publishForm').reset();
             document.querySelector('[data-tab="feed"]').click();
             await loadResearch();
