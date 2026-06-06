@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A new era of quantum research on Algorand</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', papyrus;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        .site-header {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Logo 39 - Quantum Inspired */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon span {
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -1px;
+            font-family: 'Inter', monospace;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Quantum superposition rings around logo */
+        .logo-icon::before {
+            content: "";
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(135deg, #667eea, #764ba2, #10b981);
+            border-radius: 17px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+        }
+
+        .logo-icon:hover::before {
+            opacity: 0.5;
+        }
+
+        /* Quantum dot (electron orbit) */
+        .logo-icon::after {
+            content: "";
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+            animation: orbit 3s linear infinite;
+        }
+
+        @keyframes orbit {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(8px, -8px);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+        }
+
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #111827;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-sub {
+            font-size: 0.7rem;
+            color: #6b7280;
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
+
+        /* Navigation */
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #4b5563;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #111827;
+        }
+
+        .wallet-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .wallet-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .wallet-status {
+            font-size: 0.75rem;
+            color: #10b981;
+            background: #ecfdf5;
+            padding: 0.35rem 0.85rem;
+            border-radius: 2rem;
+            font-weight: 500;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin: 4rem 0 3rem 0;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: #f3f4f6;
+            color: #4b5563;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            color: #0f172a;
+            line-height: 1.2;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #667eea, #764ba2, #10b981);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .hero-meta span {
+            font-size: 0.875rem;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 2rem;
+            gap: 0;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #6b7280;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: #111827;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+        }
+
+        .page.active-page {
+            display: block;
+        }
+
+        /* Research List */
+        .research-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .research-item {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: box-shadow 0.2s;
+        }
+
+        .research-item:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        }
+
+        .research-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        .research-authors {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.75rem;
+        }
+
+        .research-meta {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .research-abstract {
+            font-size: 0.875rem;
+            color: #4b5563;
+            line-height: 1.6;
+            margin: 1rem 0;
+        }
+
+        .ai-summary {
+            background: linear-gradient(135deg, #f5f3ff 0%, #faf5ff 100%);
+            border-left: 3px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .ai-summary-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .timestamp-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.7rem;
+            color: #10b981;
+            background: #ecfdf5;
+            padding: 0.25rem 0.6rem;
+            border-radius: 2rem;
+            margin-top: 0.75rem;
+        }
+
+        .timestamp-badge a {
+            color: #10b981;
+            text-decoration: none;
+        }
+
+        .timestamp-badge a:hover {
+            text-decoration: underline;
+        }
+
+        .fund-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-top: 0.75rem;
+        }
+
+        .fund-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Publish Form */
+        .publish-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 800px;
+        }
+
+        .publish-card h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 0.875rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Footer */
+        .site-footer {
+            border-top: 1px solid #e5e7eb;
+            margin-top: 4rem;
+            padding: 2rem 0;
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: #6b7280;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .footer-links a:hover {
+            color: #111827;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: #9ca3af;
+            background: #fafafa;
+            border-radius: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; }
+            .hero h1 { font-size: 2rem; }
+            .header-inner { flex-direction: column; text-align: center; }
+            .hero-meta { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-inner">
+        <!-- Logo 39 -->
+        <a href="#" data-nav="home" class="logo">
+            <div class="logo-icon">
+                <span>39</span>
+            </div>
+            <div>
+                <div class="logo-text"><span>39</span> Quantum</div>
+                <div class="logo-sub">Verified on Algorand</div>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a data-nav="home">Papers</a>
+            <a data-nav="about">About</a>
+            <a data-nav="socials">Socials</a>
+            <button id="walletBtn" class="wallet-btn">🔗 Connect Wallet</button>
+            <span id="walletStatusDisplay" class="wallet-status" style="display: none;">Connected</span>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <!-- HOME PAGE -->
+    <div id="homePage" class="page active-page">
+        <div class="hero">
+            <div class="hero-badge">⚛️ Quantum Research DAO</div>
+            <h1>Publish. Verify. <span class="highlight">Fund.</span></h1>
+            <p>39 is a decentralized platform for quantum computing research. Upload your thesis, get an AI summary from Llama 3.2, and receive an immutable timestamp on Algorand.</p>
+            <div class="hero-meta">
+                <span>📄 Loading papers...</span>
+                
+                
+                
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="feed">📄 Quantum Papers</button>
+            <button class="tab-btn" data-tab="publish">✍️ Submit Thesis</button>
+        </div>
+
+        <div id="feedTab">
+            <div id="researchFeed" class="research-list">
+                <div class="empty-state">Loading quantum papers from the blockchain...</div>
+            </div>
+        </div>
+
+        <div id="publishTab" style="display: none;">
+            <div class="publish-card">
+                <h2>✍️ Submit Your Quantum Research</h2>
+                <p style="color: #6b7280; margin-bottom: 1.5rem;">Your thesis will be timestamped on Algorand and summarized by Llama 3.2 AI.</p>
+                <form id="publishForm">
+                    <div class="form-group">
+                        <label>Thesis Title *</label>
+                        <input type="text" id="title" placeholder="e.g., A Novel Approach to Quantum Error Correction" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Authors *</label>
+                        <input type="text" id="authors" placeholder="e.g., Dr. Jane Smith, Prof. Quantum Lee" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Institution</label>
+                        <input type="text" id="institution" placeholder="e.g., MIT Quantum Research Lab">
+                    </div>
+                    <div class="form-group">
+                        <label>Abstract *</label>
+                        <textarea id="abstract" rows="8" placeholder="Paste your quantum thesis abstract here. Our AI will simplify it and Algorand will timestamp it." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Funding URL (optional)</label>
+                        <input type="url" id="fundingUrl" placeholder="https://gitcoin.co/grants/... or your funding page">
+                    </div>
+                    <button type="submit" class="submit-btn">📅 Publish & Timestamp on Algorand</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABOUT PAGE -->
+    <div id="aboutPage" class="page">
+        <h1 style="margin-bottom: 1rem;">About <span class="highlight">39</span></h1>
+        <div class="mission-statement" style="background: linear-gradient(135deg, #f5f3ff, #faf5ff); padding: 2rem; border-radius: 1rem; margin: 1.5rem 0;">
+            <p style="font-size: 1.125rem; color: #1e1b4b;">39 is a quantum research DAO accelerating quantum computing by removing barriers between researchers, readers, and funders — all verified on Algorand.</p>
+        </div>
+        
+        <h2 style="margin: 2rem 0 1rem;">Why 39?</h2>
+        <div class="about-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+            <div style="padding: 1.5rem; background: #fafafa; border-radius: 1rem;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔬</div>
+                <h3>Researchers</h3>
+                <p style="color: #6b7280; font-size: 0.875rem;">Share preprints, get AI summaries, receive funding.</p>
+            </div>
+            <div style="padding: 1.5rem; background: #fafafa; border-radius: 1rem;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🤖</div>
+                <h3>Readers</h3>
+                <p style="color: #6b7280; font-size: 0.875rem;">Understand quantum research without a physics degree.</p>
+            </div>
+            <div style="padding: 1.5rem; background: #fafafa; border-radius: 1rem;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
+                <h3>Backers</h3>
+                <p style="color: #6b7280; font-size: 0.875rem;">Fund research you believe in directly.</p>
+            </div>
+            <div style="padding: 1.5rem; background: #fafafa; border-radius: 1rem;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⛓️</div>
+                <h3>Algorand</h3>
+                <p style="color: #6b7280; font-size: 0.875rem;">Immutable timestamped records on blockchain.</p>
+            </div>
+        </div>
+
+        <div style="padding: 1.5rem; background: #f8fafc; border-radius: 1rem; margin: 1.5rem 0;">
+            <h3>📊 Platform Stats</h3>
+            <p id="statsPlaceholder" style="margin-top: 0.5rem;">Loading...</p>
+        </div>
+    </div>
+
+    <!-- SOCIALS PAGE -->
+    <div id="socialsPage" class="page">
+        <h1 style="margin-bottom: 1rem;">Connect With <span class="highlight">39</span></h1>
+        <div class="socials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <a href="#" class="social-card" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 1rem; text-decoration: none; color: #111827;">
+                <span style="font-size: 2rem;">🐙</span>
+                <div><strong>GitHub</strong><div style="font-size: 0.75rem; color: #6b7280;">@39-quantum</div></div>
+            </a>
+            <a href="#" class="social-card" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 1rem; text-decoration: none; color: #111827;">
+                <span style="font-size: 2rem;">🐦</span>
+                <div><strong>Twitter/X</strong><div style="font-size: 0.75rem; color: #6b7280;">@39Quantum</div></div>
+            </a>
+            <a href="#" class="social-card" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 1rem; text-decoration: none; color: #111827;">
+                
+            <a href="#" class="social-card" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 1rem; text-decoration: none; color: #111827;">
+                <span style="font-size: 2rem;">📧</span>
+                <div><strong>Email</strong><div style="font-size: 0.75rem; color: #6b7280;">hello@39quantum.com</div></div>
+            </a>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-links">
+        <a data-nav="home">Papers</a>
+        <a data-nav="about">About</a>
+        <a data-nav="socials">Socials</a>
+    </div>
+    <p>⚛️ 39 Quantum Research DAO · Llama 3.2 AI · Verified on Algorand</p>
+</footer>
+
+<script>
+    // ============================================
+    // 39 QUANTUM RESEARCH PLATFORM
+    // Algorand Timestamping + Llama 3.2 AI
+    // ============================================
+    
+    let researchData = [];
+    let walletConnected = false;
+    let currentAccount = null;
+    
+    const API_URL = '/api/research';
+    
+    // Load papers from server
+    async function loadResearch() {
+        const response = await fetch(API_URL);
+        researchData = await response.json();
+        renderFeed();
+        
+        const heroMeta = document.querySelector('.hero-meta');
+        if (heroMeta) {
+            heroMeta.innerHTML = `
+                <span>📄 ${researchData.length} papers</span>
+                <span>🦙 Llama 3.2 AI</span>
+                <span>🔗 Algorand Verified</span>
+                <span>💰 DAO Funded</span>
+            `;
+        }
+    }
+    
+    // Display papers
+    function renderFeed() {
+        const feed = document.getElementById('researchFeed');
+        
+        if (researchData.length === 0) {
+            feed.innerHTML = '<div class="empty-state">✨ No quantum papers yet. Be the first to submit your research!</div>';
+            return;
+        }
+        
+        feed.innerHTML = researchData.map(paper => `
+            <div class="research-item">
+                <div class="research-title">${escapeHtml(paper.title)}</div>
+                <div class="research-authors">${paper.authors || 'Anonymous'} ${paper.institution ? `· ${paper.institution}` : ''}</div>
+                <div class="research-meta">
+                    📅 ${new Date(paper.timestamp).toLocaleDateString()}
+                    ${paper.views ? `· 👁️ ${paper.views} views` : ''}
+                </div>
+                <div class="research-abstract">${escapeHtml(paper.abstract?.substring(0, 300))}...</div>
+                <div class="ai-summary">
+                    <div class="ai-summary-label">🦙 Llama 3.2 AI Summary</div>
+                    <div>${escapeHtml(paper.aiSummary || 'Generating summary...')}</div>
+                </div>
+                ${paper.algorandTimestamp && paper.algorandTimestamp.txId ? `
+                    <div class="timestamp-badge">
+                        🔗 ⛓️ Algorand Verified · 
+                        <a href="${paper.algorandTimestamp.blockExplorer}" target="_blank">View TX ➜</a>
+                    </div>
+                ` : ''}
+                ${paper.fundingUrl ? `<a href="${paper.fundingUrl}" target="_blank" class="fund-link">💰 Fund This Research →</a>` : ''}
+            </div>
+        `).join('');
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    // Publish new paper
+    async function publishResearch(paperData) {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(paperData)
+        });
+        return response.ok;
+    }
+    
+    // Connect Algorand wallet
+    async function connectWallet() {
+        if (typeof window.algorand !== 'undefined') {
+            try {
+                const accounts = await window.algorand.connect();
+                walletConnected = true;
+                currentAccount = accounts[0];
+                
+                document.getElementById('walletBtn').style.display = 'none';
+                const statusSpan = document.getElementById('walletStatusDisplay');
+                statusSpan.style.display = 'inline-block';
+                statusSpan.textContent = `✓ ${currentAccount.slice(0, 6)}...${currentAccount.slice(-4)}`;
+                
+                return accounts;
+            } catch (error) {
+                alert('Failed to connect: ' + error.message);
+            }
+        } else {
+            alert('Install Pera Wallet extension');
+            window.open('https://perawallet.app/download', '_blank');
+        }
+    }
+    
+    // Form submission
+    document.getElementById('publishForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (!walletConnected) {
+            const confirm = window.confirm('Connect your Algorand wallet to publish and get a blockchain timestamp?');
+            if (confirm) await connectWallet();
+            if (!walletConnected) return;
+        }
+        
+        const newPaper = {
+            title: document.getElementById('title').value,
+            authors: document.getElementById('authors').value,
+            institution: document.getElementById('institution').value || '',
+            abstract: document.getElementById('abstract').value,
+            fundingUrl: document.getElementById('fundingUrl').value || '',
+            authorWallet: currentAccount
+        };
+        
+        const btn = document.querySelector('.submit-btn');
+        btn.textContent = '⏳ Submitting & Timestamping...';
+        btn.disabled = true;
+        
+        const success = await publishResearch(newPaper);
+        
+        if (success) {
+            alert('✅ Thesis published! Timestamped on Algorand + summarized by Llama 3.2');
+            document.getElementById('publishForm').reset();
+            document.querySelector('[data-tab="feed"]').click();
+            await loadResearch();
+        } else {
+            alert('❌ Failed to publish');
+        }
+        
+        btn.textContent = '📅 Publish & Timestamp on Algorand';
+        btn.disabled = false;
+    });
+    
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tab = btn.dataset.tab;
+            
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            document.getElementById('feedTab').style.display = tab === 'feed' ? 'block' : 'none';
+            document.getElementById('publishTab').style.display = tab === 'publish' ? 'block' : 'none';
+            
+            if (tab === 'feed') loadResearch();
+        });
+    });
+    
+    // Page navigation
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active-page');
+        });
+        document.getElementById(`${pageId}Page`).classList.add('active-page');
+        
+        if (pageId === 'home') loadResearch();
+        if (pageId === 'about') {
+            const timestamped = researchData.filter(p => p.algorandTimestamp?.txId).length;
+            document.getElementById('statsPlaceholder').innerHTML = `
+                📄 ${researchData.length} total papers<br>
+                
+             
+                
+            `;
+        }
+    }
+    
+    document.querySelectorAll('[data-nav]').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage(el.getAttribute('data-nav'));
+        });
+    });
+    
+    // Wallet button
+    document.getElementById('walletBtn')?.addEventListener('click', connectWallet);
+    
+    // Load Pera Wallet script and start
+    const script = document.createElement('script');
+    script.src = 'https://connect.perawallet.app/1.0.0/pera-wallet-connect.min.js';
+    script.onload = () => {
+        console.log('✅ Pera Wallet ready');
+        loadResearch();
+    };
+    document.head.appendChild(script);
+</script>
+</body>
+</html>

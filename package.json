@@ -1,0 +1,20 @@
+{
+  "name": "39-quantum",
+  "version": "1.0.0",
+  "description": "39 Quantum Research Platform - Algorand verified theses with Llama 3.2 AI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": ["quantum", "algorand", "blockchain", "ai", "research"],
+  "author": "39 Quantum DAO",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
