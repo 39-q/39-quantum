@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+    <title>39 Quantum</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>39-quantum</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,784 +12,280 @@
         }
 
         body {
-<<<<<<< HEAD
-            font-family: 'Inter', sans-serif;
-=======
-            font-family: 'Inter', gothic;
->>>>>>> 76992ab052a167da01ba80a1f6c03eb3c44edddc
-            background: #ffffff;
+            
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #f5f5f5;
             color: #1a1a1a;
             line-height: 1.5;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 2rem;
         }
 
         /* Header */
-        .site-header {
-            border-bottom: 1px solid #e5e7eb;
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            z-index: 100;
-        }
-
-        .header-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
         }
 
-        /* Logo 39 - Quantum Inspired */
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #000807;
+            font-family: 'Courier New', monospace;
+        }
+
+        nav a {
+            margin-left: 1.5rem;
             text-decoration: none;
-            cursor: pointer;
+            color: #666;
         }
 
-        .logo-icon {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .logo-icon:hover {
-            transform: scale(1.05);
-        }
-
-        .logo-icon span {
-            font-size: 28px;
-            font-weight: 800;
-            color: white;
-            letter-spacing: -1px;
-            font-family: 'Inter', monospace;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Quantum superposition rings around logo */
-        .logo-icon::before {
-            content: "";
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            background: linear-gradient(135deg, #667eea, #764ba2, #10b981);
-            border-radius: 17px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 0;
-        }
-
-        .logo-icon:hover::before {
-            opacity: 0.5;
-        }
-
-       
-        @keyframes orbit {
-            0% {
-                transform: translate(0, 0);
-                opacity: 1;
-            }
-            50% {
-                transform: translate(8px, -8px);
-                opacity: 0.5;
-            }
-            100% {
-                transform: translate(0, 0);
-                opacity: 1;
-            }
-        }
-
-        .logo-text {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #111827;
-            letter-spacing: -0.5px;
-        }
-
-        .logo-text span {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .logo-sub {
-            font-size: 0.7rem;
-            color: #6b7280;
-            margin-top: 2px;
-            letter-spacing: 0.3px;
-        }
-
-        /* Navigation */
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            color: #4b5563;
-            font-size: 0.875rem;
-            font-weight: 500;
-            text-decoration: none;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: #111827;
-        }
-
-        .wallet-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 0.5rem 1.2rem;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .wallet-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-
-        .wallet-status {
-            font-size: 0.75rem;
-            color: #10b981;
-            background: #ecfdf5;
-            padding: 0.35rem 0.85rem;
-            border-radius: 2rem;
-            font-weight: 500;
+        nav a:hover {
+            color: #00BEA5;
         }
 
         /* Hero Section */
         .hero {
-            margin: 4rem 0 3rem 0;
-            max-width: 800px;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            background: #f3f4f6;
-            color: #4b5563;
-            font-size: 0.75rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 2rem;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
+            text-align: left;
+            margin: 3rem 0;
         }
 
         .hero h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            margin-bottom: 1.5rem;
-            color: #0f172a;
-            line-height: 1.2;
-        }
-
-        .hero h1 .highlight {
-            background: linear-gradient(135deg, #667eea, #764ba2, #10b981);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 48px;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
         }
 
         .hero p {
-            font-size: 1.125rem;
-            color: #475569;
-            line-height: 1.6;
-            margin-bottom: 2rem;
+            font-size: 18px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
         }
 
-        .hero-meta {
-            display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-            padding-top: 1rem;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .hero-meta span {
-            font-size: 0.875rem;
-            color: #6b7280;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-
-        /* Pages */
-        .page {
-            display: none;
-        }
-
-        .page.active-page {
-            display: block;
-        }
-
-        /* Research List */
-        .research-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .research-item {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            transition: box-shadow 0.2s;
-        }
-
-        .research-item:hover {
-            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-        }
-
-        .research-title {
-            font-size: 1.125rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: #111827;
-        }
-
-        .research-authors {
-            font-size: 0.875rem;
-            color: #6b7280;
-            margin-bottom: 0.75rem;
-        }
-
-        .research-meta {
-            font-size: 0.75rem;
-            color: #9ca3af;
-            margin-bottom: 1rem;
+        /* Buttons */
+        .btn-group {
             display: flex;
             gap: 1rem;
+            justify-content: center;
             flex-wrap: wrap;
         }
 
-        .research-abstract {
-            font-size: 0.875rem;
-            color: #4b5563;
-            line-height: 1.6;
-            margin: 1rem 0;
-        }
-
-        .ai-summary {
-            background: linear-gradient(135deg, #f5f3ff 0%, #faf5ff 100%);
-            border-left: 3px solid #667eea;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 0.5rem;
-        }
-
-        .ai-summary-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            font-weight: 700;
-            color: #667eea;
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.5px;
-        }
-
-        .timestamp-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            font-size: 0.7rem;
-            color: #10b981;
-            background: #ecfdf5;
-            padding: 0.25rem 0.6rem;
-            border-radius: 2rem;
-            margin-top: 0.75rem;
-        }
-
-        .timestamp-badge a {
-            color: #10b981;
-            text-decoration: none;
-        }
-
-        .timestamp-badge a:hover {
-            text-decoration: underline;
-        }
-
-        .fund-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #3b82f6;
-            text-decoration: none;
-            margin-top: 0.75rem;
-        }
-
-        .fund-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Publish Form */
-        .publish-card {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 1rem;
-            padding: 2rem;
-            max-width: 800px;
-        }
-
-        .publish-card h2 {
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #374151;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            font-size: 0.875rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            font-family: inherit;
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .submit-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        button {
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: 500;
             border: none;
-            padding: 0.75rem 1.5rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            border-radius: 0.5rem;
+            border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.2s;
         }
 
-        .submit-btn:hover {
+        .btn-primary {
+            background: #00BEA5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #009B87;
             transform: translateY(-1px);
         }
 
-        /* Footer */
-        .site-footer {
-            border-top: 1px solid #e5e7eb;
-            margin-top: 4rem;
-            padding: 2rem 0;
-            font-size: 0.75rem;
-            color: #6b7280;
-            text-align: center;
+        .btn-outline {
+            background: transparent;
+            color: #00BEA5;
+            border: 2px solid #00BEA5;
         }
 
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
+        .btn-outline:hover {
+            background: #00BEA5;
+            color: white;
+        }
+
+        /* Papers Section */
+        .papers {
+            margin-top: 3rem;
+        }
+
+        .papers h2 {
+            margin-bottom: 1.5rem;
+            font-size: 24px;
+        }
+
+        .paper-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 1rem;
             margin-bottom: 1rem;
         }
 
-        .footer-links a {
-            color: #6b7280;
-            text-decoration: none;
-            cursor: pointer;
+        .paper-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 0.25rem;
         }
 
-        .footer-links a:hover {
-            color: #111827;
+        .paper-authors {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 0.5rem;
         }
 
-        .empty-state {
+        .paper-abstract {
+            font-size: 14px;
+            color: #444;
+        }
+
+        /* Footer */
+        .footer {
             text-align: center;
-            padding: 4rem;
-            color: #9ca3af;
-            background: #fafafa;
-            border-radius: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .container { padding: 0 1rem; }
-            .hero h1 { font-size: 2rem; }
-            .header-inner { flex-direction: column; text-align: center; }
-            .hero-meta { justify-content: center; }
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <div class="logo">39 Quantum</div>
+            <nav>
+                <a href="#">Papers</a>
+                <a href="#">About</a>
+                <a href="#">Socials</a>
+            </nav>
+        </header>
 
-<header class="site-header">
-    <div class="header-inner">
-        <!-- Logo 39 -->
-        <a href="#" data-nav="home" class="logo">
-            <div class="logo-icon">
-                <span>39</span>
-            </div>
-            <div>
-                <div class="logo-text"><span>39</span> Quantum</div>
-                <div class="logo-sub">Verified on Algorand</div>
-            </div>
-        </a>
-        <div class="nav-links">
-            <a data-nav="home">Papers</a>
-            <a data-nav="about">About</a>
-            <a data-nav="socials">Socials</a>
-<<<<<<< HEAD
-            <button id="walletBtn" class="wallet-btn"> Connect Wallet</button>
-=======
-            <button id="walletBtn" class="wallet-btn">Connect Wallet</button>
->>>>>>> 76992ab052a167da01ba80a1f6c03eb3c44edddc
-            <span id="walletStatusDisplay" class="wallet-status" style="display: none;">Connected</span>
-        </div>
-    </div>
-</header>
-
-<main class="container">
-    <!-- HOME PAGE -->
-    <div id="homePage" class="page active-page">
         <div class="hero">
-<<<<<<< HEAD
-            <div class="hero-badge">Quantum Research Platform</div>
-            <h1>Publish. Verify. <span class="highlight">Fund.</span></h1>
-            <p>39 is a decentralized platform for quantum computing research. Upload your thesis, get an AI summary , and receive an immutable timestamp on Algorand.</p>
-=======
-            <div class="hero-badge">Quantum Research DAO</div>
             <h1>Publish. Verify. Fund.</h1>
-            <p>39 is a decentralized platform for quantum computing research. Upload your thesis, get an AI summary , receive an immutable timestamp on Algorand and recieve funding from investors.</p>
->>>>>>> 76992ab052a167da01ba80a1f6c03eb3c44edddc
-            <div class="hero-meta">
-                <span>Loading papers...</span>
-                
-                
-                
+            <p>The future of quantum research on Algorand. Upload your thesis, get AI summaries, and receive immutable timestamps.</p>
+            <div class="btn-group">
+                <button class="btn-primary" id="connectBtn">Connect Wallet</button>
+                <button class="btn-outline" id="submitBtn">Submit Thesis</button>
+                <button class="btn-outline" id="viewBtn">View Papers</button>
             </div>
         </div>
 
-        <div class="tabs">
-<<<<<<< HEAD
-            <button class="tab-btn active" data-tab="feed"> Quantum Papers</button>
-=======
-            <button class="tab-btn active" data-tab="feed"> Research Papers</button>
->>>>>>> 76992ab052a167da01ba80a1f6c03eb3c44edddc
-            <button class="tab-btn" data-tab="publish"> Submit Thesis</button>
-        </div>
-
-        <div id="feedTab">
-            <div id="researchFeed" class="research-list">
-                <div class="empty-state">Loading quantum papers from the blockchain...</div>
-            </div>
-        </div>
-
-        <div id="publishTab" style="display: none;">
-            <div class="publish-card">
-                <h2> I</h2>
-                <p style="color: #6b7280; margin-bottom: 1.5rem;">Your thesis will be timestamped on Algorand and summarized  AI.</p>
-                <form id="publishForm">
-                    <div class="form-group">
-                        <label>Thesis Title *</label>
-                        <input type="text" id="title" placeholder="e.g., A Novel Approach to Quantum Error Correction" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Authors *</label>
-                        <input type="text" id="authors" placeholder="e.g., Dr. Jane Smith, Prof. Quantum Lee" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Institution</label>
-                        <input type="text" id="institution" placeholder="e.g., MIT Quantum Research Lab,Independent">
-                    </div>
-                    <div class="form-group">
-                        <label>Abstract *</label>
-                        <textarea id="abstract" rows="8" placeholder="Paste your quantum thesis abstract here. Our AI will simplify it and Algorand will timestamp it." required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Funding URL (optional)</label>
-                        <input type="url" id="fundingUrl" placeholder="https://gitcoin.co/grants/... or your funding page">
-                    </div>
-                    <button type="submit" class="submit-btn"> Publish & Timestamp on Algorand</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- ABOUT PAGE -->
-    <div id="aboutPage" class="page">
-        <h1 style="margin-bottom: 1rem;">About <span class="highlight">39</span></h1>
-        <div class="mission-statement" style="background: linear-gradient(135deg, #f5f3ff, #faf5ff); padding: 2rem; border-radius: 1rem; margin: 1.5rem 0;">
-            <p style="font-size: 1.125rem; color: #1e1b4b;"> Quantum computing is a revolutionary technology. But, there is a huge gap between what researchers receive in developed countries with huge investments in quantum technology meanwhile researchers residing in poorer and less economically stronger countries have little to nothing in financing from the respective government organizations . This platform aims to record research papers into the blockchain and help quantum physicist's to connect with individual investors and quantum hobbyists around the world with built-in with a built-in AI model that summarizes research papers into more simpler terms. </p>
+        <div class="papers">
+            <h2>Recent Papers</h2>
+            <div id="papersList">Loading papers...</div>
         </div>
         
-       
+    <div class="footer">
+    <p>© 2026 39 Quantum · Built on Algorand</p>
+    <p style="margin-top: 10px;">
+        <a href="https://github.com/39-q" target="_blank" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">GitHub</a>
+        <a href="#" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">Twitter</a>
+    </p>
+</div>
 
-        <div style="padding: 1.5rem; background: #f8fafc; border-radius: 1rem; margin: 1.5rem 0;">
-            <h3> Platform Stats</h3>
-            <p id="statsPlaceholder" style="margin-top: 0.5rem;">Loading...</p>
-        </div>
-    </div>
+    <script src="https://connect.perawallet.app/1.0.0/pera-wallet-connect.min.js"></script>
+    <script>
+        let userAddress = null;
+        const API_URL = 'https://three9-quantum.onrender.com/api/research';
 
-    <!-- SOCIALS PAGE -->
-    <div id="socialsPage" class="page">
-        <h1 style="margin-bottom: 1rem;">Connect With <span class="highlight">39</span></h1>
-        <div class="socials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 2rem 0;">
-            <a href="#" class="social-card" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 1rem; text-decoration: none; color: #111827;">
-                <span style="font-size: 2rem;">🐙</span>
-                <div><strong>GitHub</strong><div style="font-size: 0.75rem; color: #6b7280;">@39-q</div></div>
-            </a>
-            <a href="#" class="social-card" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 1rem; text-decoration: none; color: #111827;">
-                <span style="font-size: 2rem;">🐦</span>
-                <div><strong>Twitter/X</strong><div style="font-size: 0.75rem; color: #6b7280;">COMING SOON!</div></div>
-                
-            <a href="#" class="social-card" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 1rem; text-decoration: none; color: #111827;">
-                <span style="font-size: 2rem;">📧</span>
-                <div><strong>Email</strong><div style="font-size: 0.75rem; color: #6b7280;">COMIN SOON!</div></div>
-            </a>
-        </div>
-    </div>
-</main>
-
-<footer class="site-footer">
-    <div class="footer-links">
-        <a data-nav="home">Papers</a>
-        <a data-nav="about">About</a>
-        
-    </div>
-    <p>© 2026 39 Quantum. All rights reserved</p>
-</footer>
-
-<script>
-    // ============================================
-    // 39 QUANTUM RESEARCH PLATFORM
-    // Algorand Timestamping + Llama 3.2 AI
-    // ============================================
-    
-    let researchData = [];
-    let walletConnected = false;
-    let currentAccount = null;
-    
-    const API_URL = '/api/research';
-    
-    // Load papers from server
-    async function loadResearch() {
-        const response = await fetch(API_URL);
-        researchData = await response.json();
-        renderFeed();
-        
-        const heroMeta = document.querySelector('.hero-meta');
-        if (heroMeta) {
-            heroMeta.innerHTML = `
-                <span> ${researchData.length} papers</span>
-            `;
-        }
-    }
-    
-    // Display papers
-    function renderFeed() {
-        const feed = document.getElementById('researchFeed');
-        
-        if (researchData.length === 0) {
-            feed.innerHTML = '<div class="empty-state"> No quantum papers yet. Be the first to submit your research!</div>';
-            return;
-        }
-        
-        feed.innerHTML = researchData.map(paper => `
-            <div class="research-item">
-                <div class="research-title">${escapeHtml(paper.title)}</div>
-                <div class="research-authors">${paper.authors || 'Anonymous'} ${paper.institution ? `· ${paper.institution}` : ''}</div>
-                <div class="research-meta">
-                     ${new Date(paper.timestamp).toLocaleDateString()}
-                    ${paper.views ? `·  ${paper.views} views` : ''}
-                </div>
-                <div class="research-abstract">${escapeHtml(paper.abstract?.substring(0, 300))}...</div>
-                <div class="ai-summary">
-                    <div class="ai-summary-label"> AI Summary</div>
-                    <div>${escapeHtml(paper.aiSummary || 'Generating summary...')}</div>
-                </div>
-                ${paper.algorandTimestamp && paper.algorandTimestamp.txId ? `
-                    <div class="timestamp-badge">
-                         Algorand Verified · 
-                        <a href="${paper.algorandTimestamp.blockExplorer}" target="_blank">View TX ➜</a>
-                    </div>
-                ` : ''}
-                ${paper.fundingUrl ? `<a href="${paper.fundingUrl}" target="_blank" class="fund-link">Fund This Research →</a>` : ''}
-            </div>
-        `).join('');
-    }
-    
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-    
-    // Publish new paper
-    async function publishResearch(paperData) {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(paperData)
-        });
-        return response.ok;
-    }
-    
-    // Connect Algorand wallet
-    async function connectWallet() {
-        if (typeof window.algorand !== 'undefined') {
+        // Load papers on page load
+        async function loadPapers() {
+            const papersDiv = document.getElementById('papersList');
+            papersDiv.innerHTML = 'Loading...';
             try {
-                const accounts = await window.algorand.connect();
-                walletConnected = true;
-                currentAccount = accounts[0];
-                
-                document.getElementById('walletBtn').style.display = 'none';
-                const statusSpan = document.getElementById('walletStatusDisplay');
-                statusSpan.style.display = 'inline-block';
-                statusSpan.textContent = `✓ ${currentAccount.slice(0, 6)}...${currentAccount.slice(-4)}`;
-                
-                return accounts;
+                const response = await fetch(API_URL);
+                const papers = await response.json();
+                if (papers.length === 0) {
+                    papersDiv.innerHTML = '<div class="paper-card">No papers yet. Be the first to submit!</div>';
+                    return;
+                }
+                papersDiv.innerHTML = papers.slice(0, 10).map(paper => `
+                    <div class="paper-card">
+                        <div class="paper-title">${escapeHtml(paper.title)}</div>
+                        <div class="paper-authors">${paper.authors || 'Anonymous'} ${paper.institution ? `· ${paper.institution}` : ''}</div>
+                        <div class="paper-abstract">${escapeHtml(paper.abstract?.substring(0, 200) || '')}...</div>
+                    </div>
+                `).join('');
             } catch (error) {
-                alert('Failed to connect: ' + error.message);
+                papersDiv.innerHTML = '<div class="paper-card">Error loading papers. Backend may be starting up.</div>';
             }
-        } else {
-            alert('Install Pera Wallet extension');
-            window.open('https://perawallet.app/download', '_blank');
         }
-    }
-    
-    // Form submission
-    document.getElementById('publishForm')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        if (!walletConnected) {
-            const confirm = window.confirm('Connect your Algorand wallet to publish and get a blockchain timestamp?');
-            if (confirm) await connectWallet();
-            if (!walletConnected) return;
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
         }
-        
-        const newPaper = {
-            title: document.getElementById('title').value,
-            authors: document.getElementById('authors').value,
-            institution: document.getElementById('institution').value || '',
-            abstract: document.getElementById('abstract').value,
-            fundingUrl: document.getElementById('fundingUrl').value || '',
-            authorWallet: currentAccount
+
+        // Connect Wallet
+        document.getElementById('connectBtn').onclick = async () => {
+            if (typeof window.peraWallet === 'undefined') {
+                alert('⚠️ Pera Wallet not installed.\n\nInstall from: perawallet.app');
+                window.open('https://perawallet.app/download', '_blank');
+                return;
+            }
+            try {
+                const accounts = await window.peraWallet.connect();
+                userAddress = accounts[0];
+                const btn = document.getElementById('connectBtn');
+                btn.textContent = `✅ ${userAddress.slice(0,6)}...`;
+                btn.disabled = true;
+                alert('Wallet connected successfully!');
+            } catch (error) {
+                alert('Connection failed: ' + error.message);
+            }
         };
-        
-        const btn = document.querySelector('.submit-btn');
-        btn.textContent = 'Submitting & Timestamping...';
-        btn.disabled = true;
-        
-        const success = await publishResearch(newPaper);
-        
-        if (success) {
-            alert('Thesis published! Timestamped on Algorand');
-            document.getElementById('publishForm').reset();
-            document.querySelector('[data-tab="feed"]').click();
-            await loadResearch();
-        } else {
-            alert('❌ Failed to publish');
-        }
-        
-        btn.textContent = 'Publish & Timestamp on Algorand';
-        btn.disabled = false;
-    });
-    
-    // Tab switching
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const tab = btn.dataset.tab;
-            
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            document.getElementById('feedTab').style.display = tab === 'feed' ? 'block' : 'none';
-            document.getElementById('publishTab').style.display = tab === 'publish' ? 'block' : 'none';
-            
-            if (tab === 'feed') loadResearch();
-        });
-    });
-    
-    // Page navigation
-    function showPage(pageId) {
-        document.querySelectorAll('.page').forEach(page => {
-            page.classList.remove('active-page');
-        });
-        document.getElementById(`${pageId}Page`).classList.add('active-page');
-        
-        if (pageId === 'home') loadResearch();
-        if (pageId === 'about') {
-            const timestamped = researchData.filter(p => p.algorandTimestamp?.txId).length;
-            document.getElementById('statsPlaceholder').innerHTML = `
-                 ${researchData.length} total papers<br>
-                
-             
-                
-            `;
-        }
-    }
-    
-    document.querySelectorAll('[data-nav]').forEach(el => {
-        el.addEventListener('click', (e) => {
-            e.preventDefault();
-            showPage(el.getAttribute('data-nav'));
-        });
-    });
-    
-    // Wallet button
-    document.getElementById('walletBtn')?.addEventListener('click', connectWallet);
-    
-    // Load Pera Wallet script and start
-    const script = document.createElement('script');
-    script.src = 'https://connect.perawallet.app/1.0.0/pera-wallet-connect.min.js';
-    script.onload = () => {
-        console.log('✅ Pera Wallet ready');
-        loadResearch();
-    };
-    document.head.appendChild(script);
-</script>
+
+        // Submit Thesis
+        document.getElementById('submitBtn').onclick = async () => {
+            if (!userAddress) {
+                alert('Please connect your wallet first');
+                return;
+            }
+            const title = prompt('Enter thesis title:');
+            if (!title) return;
+            const authors = prompt('Enter author names:');
+            if (!authors) return;
+            const abstract = prompt('Enter abstract:');
+            if (!abstract) return;
+            const fundingUrl = prompt('Funding URL (optional):') || '';
+
+            const newPaper = { title, authors, abstract, fundingUrl, authorWallet: userAddress };
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newPaper)
+                });
+                if (response.ok) {
+                    alert('✅ Thesis submitted successfully!');
+                    loadPapers();
+                } else {
+                    alert('❌ Submission failed');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        };
+
+        // View Papers
+        document.getElementById('viewBtn').onclick = () => {
+            loadPapers();
+        };
+
+        // Load papers when page loads
+        loadPapers();
+    </script>
 </body>
 </html>
