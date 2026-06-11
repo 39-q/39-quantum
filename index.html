@@ -268,10 +268,10 @@
                     body: JSON.stringify(newPaper)
                 });
                 if (response.ok) {
-                    alert('✅ Thesis submitted successfully!');
+                    alert('Thesis submitted successfully!');
                     loadPapers();
                 } else {
-                    alert('❌ Submission failed');
+                    alert('Submission failed');
                 }
             } catch (error) {
                 alert('Error: ' + error.message);
