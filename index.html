@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/client@1.8.0/dist/umd/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/algorand-walletconnect-qrcode-modal@1.8.0/dist/cjs/index.min.js"></script>
     <title>39 Quantum</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +14,6 @@
         }
 
         body {
-            
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
             background: #f5f5f5;
             color: #1a1a1a;
@@ -25,7 +26,6 @@
             padding: 2rem;
         }
 
-        /* Header */
         header {
             display: flex;
             justify-content: space-between;
@@ -52,9 +52,8 @@
             color: #00BEA5;
         }
 
-        /* Hero Section */
         .hero {
-            text-align: left;
+            text-align: center;
             margin: 3rem 0;
         }
 
@@ -71,7 +70,6 @@
             margin: 0 auto 2rem auto;
         }
 
-        /* Buttons */
         .btn-group {
             display: flex;
             gap: 1rem;
@@ -110,7 +108,6 @@
             color: white;
         }
 
-        /* Papers Section */
         .papers {
             margin-top: 3rem;
         }
@@ -145,7 +142,6 @@
             color: #444;
         }
 
-        /* Footer */
         .footer {
             text-align: center;
             margin-top: 3rem;
@@ -159,7 +155,10 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo">39 Quantum</div> 
+            <div class="logo">39 Quantum</div>
+            <nav>
+                <a href="#">Papers</a>
+            </nav>
         </header>
 
         <div class="hero">
@@ -177,20 +176,49 @@
             <div id="papersList">Loading papers...</div>
         </div>
         
-    <div class="footer">
-    <p>© 2026 39 Quantum · Built on Algorand</p>
-    <p style="margin-top: 10px;">
-        <a href="https://github.com/39-q" target="_blank" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">GitHub</a>
-        <a href="#" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">Twitter</a>
-    </p>
-</div>
+        <div class="footer">
+            <p>© 2026 39 Quantum · Built on Algorand</p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/39-q" target="_blank" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">GitHub</a>
+                <a href="#" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">Twitter</a>
+            </p>
+        </div>
+    </div>
 
-    <script src="https://connect.perawallet.app/1.0.0/pera-wallet-connect.min.js"></script>
     <script>
         let userAddress = null;
+        let connector = null;
         const API_URL = 'https://three9-quantum.onrender.com/api/research';
 
-        // Load papers on page load
+        // WalletConnect connection
+        async function connectWalletConnect() {
+            connector = new WalletConnect.default({
+                bridge: 'https://bridge.walletconnect.org',
+                chainId: 416002  // TestNet
+            });
+
+            if (!connector.connected) {
+                await connector.createSession();
+                WalletConnectQRCodeModal.open(connector.uri, () => {
+                    console.log('QR modal closed');
+                });
+            }
+
+            connector.on('connect', (error, payload) => {
+                if (error) {
+                    alert('Connection failed: ' + error.message);
+                    return;
+                }
+                WalletConnectQRCodeModal.close();
+                userAddress = payload.params[0].accounts[0];
+                alert('Connected: ' + userAddress.slice(0,6) + '...');
+                const connectBtn = document.getElementById('connectBtn');
+                connectBtn.textContent = userAddress.slice(0,6) + '...';
+                connectBtn.disabled = true;
+            });
+        }
+
+        // Load papers
         async function loadPapers() {
             const papersDiv = document.getElementById('papersList');
             papersDiv.innerHTML = 'Loading...';
@@ -223,25 +251,6 @@
             });
         }
 
-        // Connect Wallet
-        document.getElementById('connectBtn').onclick = async () => {
-            if (typeof window.peraWallet === 'undefined') {
-                alert('⚠️ Pera Wallet not installed.\n\nInstall from: perawallet.app');
-                window.open('https://perawallet.app/download', '_blank');
-                return;
-            }
-            try {
-                const accounts = await window.peraWallet.connect();
-                userAddress = accounts[0];
-                const btn = document.getElementById('connectBtn');
-                btn.textContent = `✅ ${userAddress.slice(0,6)}...`;
-                btn.disabled = true;
-                alert('Wallet connected successfully!');
-            } catch (error) {
-                alert('Connection failed: ' + error.message);
-            }
-        };
-
         // Submit Thesis
         document.getElementById('submitBtn').onclick = async () => {
             if (!userAddress) {
@@ -264,10 +273,10 @@
                     body: JSON.stringify(newPaper)
                 });
                 if (response.ok) {
-                    alert('✅ Thesis submitted successfully!');
+                    alert('Thesis submitted successfully!');
                     loadPapers();
                 } else {
-                    alert('❌ Submission failed');
+                    alert('Submission failed');
                 }
             } catch (error) {
                 alert('Error: ' + error.message);
@@ -278,6 +287,9 @@
         document.getElementById('viewBtn').onclick = () => {
             loadPapers();
         };
+
+        // Connect Wallet button
+        document.getElementById('connectBtn').onclick = connectWalletConnect;
 
         // Load papers when page loads
         loadPapers();
