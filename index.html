@@ -12,7 +12,6 @@
         }
 
         body {
-            
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
             background: #f5f5f5;
             color: #1a1a1a;
@@ -25,7 +24,6 @@
             padding: 2rem;
         }
 
-        /* Header */
         header {
             display: flex;
             justify-content: space-between;
@@ -52,9 +50,8 @@
             color: #00BEA5;
         }
 
-        /* Hero Section */
         .hero {
-            text-align: left;
+            text-align: center;
             margin: 3rem 0;
         }
 
@@ -71,7 +68,6 @@
             margin: 0 auto 2rem auto;
         }
 
-        /* Buttons */
         .btn-group {
             display: flex;
             gap: 1rem;
@@ -110,7 +106,6 @@
             color: white;
         }
 
-        /* Papers Section */
         .papers {
             margin-top: 3rem;
         }
@@ -145,7 +140,6 @@
             color: #444;
         }
 
-        /* Footer */
         .footer {
             text-align: center;
             margin-top: 3rem;
@@ -162,8 +156,6 @@
             <div class="logo">39 Quantum</div>
             <nav>
                 <a href="#">Papers</a>
-                <a href="#">About</a>
-                <a href="#">Socials</a>
             </nav>
         </header>
 
@@ -182,20 +174,69 @@
             <div id="papersList">Loading papers...</div>
         </div>
         
-    <div class="footer">
-    <p>© 2026 39 Quantum · Built on Algorand</p>
-    <p style="margin-top: 10px;">
-        <a href="https://github.com/39-q" target="_blank" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">GitHub</a>
-        <a href="#" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">Twitter</a>
-    </p>
-</div>
+        <div class="footer">
+            <p>© 2026 39 Quantum · Built on Algorand</p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/39-q" target="_blank" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">GitHub</a>
+                <a href="#" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">Twitter</a>
+            </p>
+        </div>
+    </div>
 
-    <script src="https://connect.perawallet.app/1.0.0/pera-wallet-connect.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/client@1.8.0/dist/umd/index.min.js"></script>
     <script>
         let userAddress = null;
+        let connector = null;
         const API_URL = 'https://three9-quantum.onrender.com/api/research';
 
-        // Load papers on page load
+        // Connect Wallet function
+        async function connectWallet() {
+            try {
+                connector = new WalletConnect.default({
+                    bridge: 'https://bridge.walletconnect.org',
+                    chainId: 416002
+                });
+
+                if (!connector.connected) {
+                    await connector.createSession();
+                    const qrUrl = connector.uri;
+                    
+                    // Create QR modal
+                    const modalDiv = document.createElement('div');
+                    modalDiv.id = 'wcModal';
+                    modalDiv.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; display:flex; justify-content:center; align-items:center;';
+                    modalDiv.innerHTML = `
+                        <div style="background:white; padding:25px; border-radius:16px; text-align:center; max-width:300px;">
+                            <h3 style="margin-bottom:15px;">Scan with Pera Wallet</h3>
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}" style="width:200px; height:200px; margin:10px 0;">
+                            <p style="margin:15px 0; font-size:14px;">Open Pera Wallet → Scan QR code</p>
+                            <button id="closeModalBtn" style="padding:8px 20px; background:#00BEA5; color:white; border:none; border-radius:8px; cursor:pointer;">Close</button>
+                        </div>
+                    `;
+                    document.body.appendChild(modalDiv);
+                    document.getElementById('closeModalBtn').onclick = () => modalDiv.remove();
+                }
+
+                connector.on('connect', (error, payload) => {
+                    if (error) {
+                        alert('Connection failed: ' + error.message);
+                        return;
+                    }
+                    const modal = document.getElementById('wcModal');
+                    if (modal) modal.remove();
+                    
+                    userAddress = payload.params[0].accounts[0];
+                    const connectBtn = document.getElementById('connectBtn');
+                    connectBtn.textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
+                    connectBtn.disabled = true;
+                    alert('Wallet connected!');
+                });
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        }
+
+        // Load papers
         async function loadPapers() {
             const papersDiv = document.getElementById('papersList');
             papersDiv.innerHTML = 'Loading...';
@@ -228,25 +269,6 @@
             });
         }
 
-        // Connect Wallet
-        document.getElementById('connectBtn').onclick = async () => {
-            if (typeof window.peraWallet === 'undefined') {
-                alert('⚠️ Pera Wallet not installed.\n\nInstall from: perawallet.app');
-                window.open('https://perawallet.app/download', '_blank');
-                return;
-            }
-            try {
-                const accounts = await window.peraWallet.connect();
-                userAddress = accounts[0];
-                const btn = document.getElementById('connectBtn');
-                btn.textContent = `✅ ${userAddress.slice(0,6)}...`;
-                btn.disabled = true;
-                alert('Wallet connected successfully!');
-            } catch (error) {
-                alert('Connection failed: ' + error.message);
-            }
-        };
-
         // Submit Thesis
         document.getElementById('submitBtn').onclick = async () => {
             if (!userAddress) {
@@ -269,10 +291,10 @@
                     body: JSON.stringify(newPaper)
                 });
                 if (response.ok) {
-                    alert('✅ Thesis submitted successfully!');
+                    alert('Thesis submitted successfully!');
                     loadPapers();
                 } else {
-                    alert('❌ Submission failed');
+                    alert('Submission failed');
                 }
             } catch (error) {
                 alert('Error: ' + error.message);
@@ -283,6 +305,9 @@
         document.getElementById('viewBtn').onclick = () => {
             loadPapers();
         };
+
+        // Connect Wallet button
+        document.getElementById('connectBtn').onclick = connectWallet;
 
         // Load papers when page loads
         loadPapers();
