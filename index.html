@@ -5,131 +5,286 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f5f5f5; text-align: center; padding: 50px; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 20px; }
-        h1 { font-size: 48px; margin-bottom: 20px; }
-        p { font-size: 18px; color: #666; margin-bottom: 30px; }
-        button { padding: 12px 28px; font-size: 16px; border: none; border-radius: 8px; cursor: pointer; margin: 10px; }
-        .btn-primary { background: #00BEA5; color: white; }
-        .btn-outline { background: transparent; color: #00BEA5; border: 2px solid #00BEA5; }
-        .paper-card { background: #f9f9f9; padding: 15px; margin: 15px 0; border-radius: 10px; text-align: left; }
-        .paper-title { font-weight: bold; }
-        .footer { margin-top: 30px; font-size: 12px; color: #666; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #000807;
+            font-family: 'Courier New', monospace;
+        }
+
+        nav a {
+            margin-left: 1.5rem;
+            text-decoration: none;
+            color: #666;
+        }
+
+        nav a:hover {
+            color: #00BEA5;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: left;
+            margin: 3rem 0;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #00BEA5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #009B87;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #00BEA5;
+            border: 2px solid #00BEA5;
+        }
+
+        .btn-outline:hover {
+            background: #00BEA5;
+            color: white;
+        }
+
+        /* Papers Section */
+        .papers {
+            margin-top: 3rem;
+        }
+
+        .papers h2 {
+            margin-bottom: 1.5rem;
+            font-size: 24px;
+        }
+
+        .paper-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .paper-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 0.25rem;
+        }
+
+        .paper-authors {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .paper-abstract {
+            font-size: 14px;
+            color: #444;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>39 Quantum</h1>
-        <p>Publish. Verify. Fund. The future of quantum research on Algorand.</p>
-        
-        <button class="btn-primary" id="connectBtn">Connect Wallet</button>
-        <button class="btn-outline" id="submitBtn">Submit Thesis</button>
-        <button class="btn-outline" id="viewBtn">View Papers</button>
-        
-        <h2 style="margin-top: 30px;">Recent Papers</h2>
-        <div id="papersList">Loading...</div>
-        
-        <div class="footer">
-            <p>© 2026 39 Quantum · Built on Algorand</p>
-            <p><a href="https://github.com/39-q" target="_blank" style="color: #00BEA5;">GitHub</a> | Twitter</p>
-        </div>
-    </div>
+        <header>
+            <div class="logo">39 Quantum</div>
+            <nav>
+                <a href="#">Papers</a>
+                <a href="#">About</a>
+                <a href="#">Socials</a>
+            </nav>
+        </header>
 
-    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/client@1.8.0/dist/umd/index.min.js"></script>
+        <div class="hero">
+            <h1>Publish. Verify. Fund.</h1>
+            <p>The future of quantum research on Algorand. Upload your thesis, get AI summaries, and receive immutable timestamps.</p>
+            <div class="btn-group">
+                <button class="btn-primary" id="connectBtn">Connect Wallet</button>
+                <button class="btn-outline" id="submitBtn">Submit Thesis</button>
+                <button class="btn-outline" id="viewBtn">View Papers</button>
+            </div>
+        </div>
+
+        <div class="papers">
+            <h2>Recent Papers</h2>
+            <div id="papersList">Loading papers...</div>
+        </div>
+        
+    <div class="footer">
+    <p>© 2026 39 Quantum · Built on Algorand</p>
+    <p style="margin-top: 10px;">
+        <a href="https://github.com/39-q" target="_blank" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">GitHub</a>
+        <a href="#" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">Twitter</a>
+    </p>
+</div>
+
+    <script src="https://connect.perawallet.app/1.0.0/pera-wallet-connect.min.js"></script>
     <script>
         let userAddress = null;
-        let walletConnector = null;
         const API_URL = 'https://three9-quantum.onrender.com/api/research';
 
-        // Connect Wallet
-        document.getElementById('connectBtn').onclick = async function() {
+        // Load papers on page load
+        async function loadPapers() {
+            const papersDiv = document.getElementById('papersList');
+            papersDiv.innerHTML = 'Loading...';
             try {
-                // Create WalletConnect connector
-                walletConnector = new WalletConnect.default({
-                    bridge: 'https://bridge.walletconnect.org',
-                    chainId: 416002
-                });
-                
-                if (!walletConnector.connected) {
-                    await walletConnector.createSession();
-                    const qrUrl = walletConnector.uri;
-                    
-                    // Show QR code in a simple modal
-                    const modal = document.createElement('div');
-                    modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:9999;';
-                    modal.innerHTML = `
-                        <div style="background:white; padding:30px; border-radius:20px; text-align:center;">
-                            <h3>Scan with Pera Wallet</h3>
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}" style="margin:20px 0;">
-                            <p>Open Pera Wallet → Scan QR code</p>
-                            <button id="closeModal" style="margin-top:20px;">Close</button>
-                        </div>
-                    `;
-                    document.body.appendChild(modal);
-                    document.getElementById('closeModal').onclick = () => modal.remove();
+                const response = await fetch(API_URL);
+                const papers = await response.json();
+                if (papers.length === 0) {
+                    papersDiv.innerHTML = '<div class="paper-card">No papers yet. Be the first to submit!</div>';
+                    return;
                 }
-                
-                walletConnector.on('connect', (error, payload) => {
-                    if (error) {
-                        alert('Connection failed: ' + error.message);
-                        return;
-                    }
-                    // Close modal if still open
-                    const modal = document.querySelector('div[style*="position:fixed"]');
-                    if (modal) modal.remove();
-                    
-                    userAddress = payload.params[0].accounts[0];
-                    document.getElementById('connectBtn').textContent = userAddress.slice(0,6) + '...';
-                    document.getElementById('connectBtn').disabled = true;
-                    alert('Connected: ' + userAddress.slice(0,6) + '...');
-                });
-                
-            } catch (err) {
-                alert('Error: ' + err.message);
+                papersDiv.innerHTML = papers.slice(0, 10).map(paper => `
+                    <div class="paper-card">
+                        <div class="paper-title">${escapeHtml(paper.title)}</div>
+                        <div class="paper-authors">${paper.authors || 'Anonymous'} ${paper.institution ? `· ${paper.institution}` : ''}</div>
+                        <div class="paper-abstract">${escapeHtml(paper.abstract?.substring(0, 200) || '')}...</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                papersDiv.innerHTML = '<div class="paper-card">Error loading papers. Backend may be starting up.</div>';
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Connect Wallet
+        document.getElementById('connectBtn').onclick = async () => {
+            if (typeof window.peraWallet === 'undefined') {
+                alert('⚠️ Pera Wallet not installed.\n\nInstall from: perawallet.app');
+                window.open('https://perawallet.app/download', '_blank');
+                return;
+            }
+            try {
+                const accounts = await window.peraWallet.connect();
+                userAddress = accounts[0];
+                const btn = document.getElementById('connectBtn');
+                btn.textContent = `✅ ${userAddress.slice(0,6)}...`;
+                btn.disabled = true;
+                alert('Wallet connected successfully!');
+            } catch (error) {
+                alert('Connection failed: ' + error.message);
             }
         };
 
-        // Load Papers
-        async function loadPapers() {
-            try {
-                const res = await fetch(API_URL);
-                const papers = await res.json();
-                const container = document.getElementById('papersList');
-                if (papers.length === 0) {
-                    container.innerHTML = '<div class="paper-card">No papers yet. Be the first!</div>';
-                    return;
-                }
-                container.innerHTML = papers.slice(0,5).map(p => `
-                    <div class="paper-card">
-                        <div class="paper-title">${p.title}</div>
-                        <div class="paper-authors">${p.authors || 'Anonymous'}</div>
-                        <div>${(p.abstract || '').substring(0,150)}...</div>
-                    </div>
-                `).join('');
-            } catch(e) { document.getElementById('papersList').innerHTML = 'Error loading papers'; }
-        }
-
         // Submit Thesis
         document.getElementById('submitBtn').onclick = async () => {
-            if (!userAddress) { alert('Connect wallet first'); return; }
-            const title = prompt('Title:'); if (!title) return;
-            const authors = prompt('Authors:'); if (!authors) return;
-            const abstract = prompt('Abstract:'); if (!abstract) return;
+            if (!userAddress) {
+                alert('Please connect your wallet first');
+                return;
+            }
+            const title = prompt('Enter thesis title:');
+            if (!title) return;
+            const authors = prompt('Enter author names:');
+            if (!authors) return;
+            const abstract = prompt('Enter abstract:');
+            if (!abstract) return;
+            const fundingUrl = prompt('Funding URL (optional):') || '';
+
+            const newPaper = { title, authors, abstract, fundingUrl, authorWallet: userAddress };
             try {
-                const res = await fetch(API_URL, {
+                const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, authors, abstract, authorWallet: userAddress })
+                    body: JSON.stringify(newPaper)
                 });
-                alert(res.ok ? 'Submitted!' : 'Failed');
-                if (res.ok) loadPapers();
-            } catch(e) { alert('Error'); }
+                if (response.ok) {
+                    alert('✅ Thesis submitted successfully!');
+                    loadPapers();
+                } else {
+                    alert('❌ Submission failed');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
         };
 
         // View Papers
-        document.getElementById('viewBtn').onclick = () => loadPapers();
+        document.getElementById('viewBtn').onclick = () => {
+            loadPapers();
+        };
 
+        // Load papers when page loads
         loadPapers();
     </script>
 </body>
