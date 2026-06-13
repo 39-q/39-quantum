@@ -30,7 +30,7 @@
             align-items: center;
             margin-bottom: 3rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid #ddd;
+            border-top: 1px solid #ddd;
         }
 
         .logo {
@@ -148,9 +148,40 @@
             color: #666;
             font-size: 12px;
         }
-        
-        .hidden {
-            display: none;
+
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 350px;
+        }
+        .modal-content img {
+            width: 200px;
+            height: 200px;
+            margin: 10px 0;
+        }
+        .modal-content button {
+            margin-top: 15px;
+            padding: 8px 20px;
+            background: #00BEA5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -167,7 +198,8 @@
             <h1>Publish. Verify. Fund.</h1>
             <p>The future of quantum research on Algorand. Upload your thesis, get AI summaries, and receive immutable timestamps.</p>
             <div class="btn-group">
-                <button class="btn-primary" id="submitBtn">Submit Thesis</button>
+                <button class="btn-primary" id="connectBtn">Connect Wallet</button>
+                <button class="btn-outline" id="submitBtn">Submit Thesis</button>
                 <button class="btn-outline" id="viewBtn">View Papers</button>
             </div>
         </div>
@@ -186,11 +218,89 @@
         </div>
     </div>
 
+    <!-- WalletConnect Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/client@1.8.0/dist/umd/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
     <script>
+        let userAddress = null;
+        let connector = null;
         const API_URL = 'https://three9-quantum.onrender.com/api/research';
-        
-        // Simple function to generate a fake wallet address for demo
-        let userAddress = '39' + Math.random().toString(36).substring(2, 10);
+
+        // Connect Wallet
+        async function connectWallet() {
+            try {
+                // Check if WalletConnect is loaded
+                if (typeof WalletConnect === 'undefined' && typeof window.WalletConnect === 'undefined') {
+                    alert('WalletConnect library loading. Please refresh and try again.');
+                    return;
+                }
+                
+                const WalletConnectLib = window.WalletConnect.default || window.WalletConnect;
+                
+                connector = new WalletConnectLib({
+                    bridge: 'https://bridge.walletconnect.org',
+                    chainId: 4160  // Universal Algorand chain ID
+                });
+
+                if (!connector.connected) {
+                    await connector.createSession();
+                    const qrUrl = connector.uri;
+                    
+                    // Create modal with QR code
+                    const modalDiv = document.createElement('div');
+                    modalDiv.className = 'modal';
+                    modalDiv.id = 'qrModal';
+                    modalDiv.innerHTML = `
+                        <div class="modal-content">
+                            <h3>Scan with Pera Wallet</h3>
+                            <div id="qrCode"></div>
+                            <p style="margin: 15px 0; font-size: 14px;">Open Pera Wallet → Scan QR code</p>
+                            <button id="closeModalBtn">Close</button>
+                        </div>
+                    `;
+                    document.body.appendChild(modalDiv);
+                    
+                    // Generate QR code
+                    new QRCode(document.getElementById('qrCode'), {
+                        text: qrUrl,
+                        width: 200,
+                        height: 200
+                    });
+                    
+                    document.getElementById('closeModalBtn').onclick = () => modalDiv.remove();
+                }
+
+                connector.on('connect', (error, payload) => {
+                    if (error) {
+                        alert('Connection failed: ' + error.message);
+                        return;
+                    }
+                    const modal = document.getElementById('qrModal');
+                    if (modal) modal.remove();
+                    
+                    userAddress = payload.params[0].accounts[0];
+                    const connectBtn = document.getElementById('connectBtn');
+                    connectBtn.textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
+                    connectBtn.disabled = true;
+                    alert('Wallet connected successfully!');
+                });
+                
+                connector.on('session_update', (error, payload) => {
+                    if (error) {
+                        console.error('Session update error:', error);
+                        return;
+                    }
+                    if (payload && payload.params && payload.params[0]) {
+                        userAddress = payload.params[0].accounts[0];
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Connection error:', error);
+                alert('Error: ' + error.message);
+            }
+        }
 
         // Load papers
         async function loadPapers() {
@@ -227,6 +337,10 @@
 
         // Submit Thesis
         document.getElementById('submitBtn').onclick = async () => {
+            if (!userAddress) {
+                alert('Please connect your wallet first');
+                return;
+            }
             const title = prompt('Enter thesis title:');
             if (!title) return;
             const authors = prompt('Enter author names:');
@@ -257,6 +371,9 @@
         document.getElementById('viewBtn').onclick = () => {
             loadPapers();
         };
+
+        // Connect Wallet button
+        document.getElementById('connectBtn').onclick = connectWallet;
 
         // Load papers when page loads
         loadPapers();
