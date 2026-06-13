@@ -30,7 +30,7 @@
             align-items: center;
             margin-bottom: 3rem;
             padding-bottom: 1rem;
-            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
         }
 
         .logo {
@@ -148,41 +148,6 @@
             color: #666;
             font-size: 12px;
         }
-
-        /* Modal styles */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background: white;
-            padding: 25px;
-            border-radius: 16px;
-            text-align: center;
-            max-width: 350px;
-        }
-        .modal-content img {
-            width: 200px;
-            height: 200px;
-            margin: 10px 0;
-        }
-        .modal-content button {
-            margin-top: 15px;
-            padding: 8px 20px;
-            background: #00BEA5;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
@@ -218,87 +183,59 @@
         </div>
     </div>
 
-    <!-- WalletConnect Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/client@1.8.0/dist/umd/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-
     <script>
         let userAddress = null;
-        let connector = null;
+        let lute = null;
         const API_URL = 'https://three9-quantum.onrender.com/api/research';
 
-        // Connect Wallet
+        // Initialize Lute Connect (loaded from CDN below)
+        async function initLute() {
+            if (typeof LuteConnect !== 'undefined') {
+                lute = new LuteConnect("39 Quantum");
+                console.log("Lute Connect initialized");
+                return true;
+            }
+            return false;
+        }
+
+        // Connect to Lute Wallet
         async function connectWallet() {
             try {
-                // Check if WalletConnect is loaded
-                if (typeof WalletConnect === 'undefined' && typeof window.WalletConnect === 'undefined') {
-                    alert('WalletConnect library loading. Please refresh and try again.');
+                // Check if Lute is installed (window.algorand)
+                if (typeof window.algorand === 'undefined') {
+                    alert('⚠️ Lute Wallet not detected!\n\nPlease install Lute Wallet from Chrome Web Store.\n\nClick OK to open the installation page.');
+                    window.open('https://chrome.google.com/webstore/detail/lute-wallet', '_blank');
                     return;
                 }
-                
-                const WalletConnectLib = window.WalletConnect.default || window.WalletConnect;
-                
-                connector = new WalletConnectLib({
-                    bridge: 'https://bridge.walletconnect.org',
-                    chainId: 4160  // Universal Algorand chain ID
-                });
 
-                if (!connector.connected) {
-                    await connector.createSession();
-                    const qrUrl = connector.uri;
-                    
-                    // Create modal with QR code
-                    const modalDiv = document.createElement('div');
-                    modalDiv.className = 'modal';
-                    modalDiv.id = 'qrModal';
-                    modalDiv.innerHTML = `
-                        <div class="modal-content">
-                            <h3>Scan with Pera Wallet</h3>
-                            <div id="qrCode"></div>
-                            <p style="margin: 15px 0; font-size: 14px;">Open Pera Wallet → Scan QR code</p>
-                            <button id="closeModalBtn">Close</button>
-                        </div>
-                    `;
-                    document.body.appendChild(modalDiv);
-                    
-                    // Generate QR code
-                    new QRCode(document.getElementById('qrCode'), {
-                        text: qrUrl,
-                        width: 200,
-                        height: 200
-                    });
-                    
-                    document.getElementById('closeModalBtn').onclick = () => modalDiv.remove();
+                // Try Lute Connect if available
+                if (lute) {
+                    try {
+                        // Get genesis ID for TestNet
+                        const genesisID = "testnet-v1.0";
+                        const addresses = await lute.connect(genesisID);
+                        userAddress = addresses[0];
+                    } catch (luteErr) {
+                        console.log("Lute Connect failed, trying direct method:", luteErr);
+                        // Fallback to direct window.algorand
+                        const accounts = await window.algorand.enable();
+                        userAddress = accounts[0];
+                    }
+                } else {
+                    // Direct connection through window.algorand
+                    const accounts = await window.algorand.enable();
+                    userAddress = accounts[0];
                 }
-
-                connector.on('connect', (error, payload) => {
-                    if (error) {
-                        alert('Connection failed: ' + error.message);
-                        return;
-                    }
-                    const modal = document.getElementById('qrModal');
-                    if (modal) modal.remove();
-                    
-                    userAddress = payload.params[0].accounts[0];
-                    const connectBtn = document.getElementById('connectBtn');
-                    connectBtn.textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
-                    connectBtn.disabled = true;
-                    alert('Wallet connected successfully!');
-                });
                 
-                connector.on('session_update', (error, payload) => {
-                    if (error) {
-                        console.error('Session update error:', error);
-                        return;
-                    }
-                    if (payload && payload.params && payload.params[0]) {
-                        userAddress = payload.params[0].accounts[0];
-                    }
-                });
+                // Update UI
+                const connectBtn = document.getElementById('connectBtn');
+                connectBtn.textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
+                connectBtn.disabled = true;
+                alert('✅ Wallet connected successfully!\n\nAddress: ' + userAddress.slice(0,10) + '...');
                 
             } catch (error) {
                 console.error('Connection error:', error);
-                alert('Error: ' + error.message);
+                alert('Connection failed: ' + error.message + '\n\nMake sure Lute Wallet is installed and unlocked.');
             }
         }
 
@@ -374,6 +311,18 @@
 
         // Connect Wallet button
         document.getElementById('connectBtn').onclick = connectWallet;
+
+        // Initialize Lute Connect from CDN
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/lute-connect@1.7.0/dist/lute-connect.min.js';
+        script.onload = () => {
+            console.log('Lute Connect loaded');
+            initLute();
+        };
+        script.onerror = () => {
+            console.log('Lute Connect CDN failed, will use direct connection');
+        };
+        document.head.appendChild(script);
 
         // Load papers when page loads
         loadPapers();
