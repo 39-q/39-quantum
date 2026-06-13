@@ -1,169 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/client@1.8.0/dist/umd/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/algorand-walletconnect-qrcode-modal@1.8.0/dist/cjs/index.min.js"></script>
     <title>39 Quantum</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            background: #f5f5f5;
-            color: #1a1a1a;
-            line-height: 1.5;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 3rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #000807;
-            font-family: 'Courier New', monospace;
-        }
-
-        nav a {
-            margin-left: 1.5rem;
-            text-decoration: none;
-            color: #666;
-        }
-
-        nav a:hover {
-            color: #00BEA5;
-        }
-
-        .hero {
-            text-align: center;
-            margin: 3rem 0;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 1rem;
-            color: #1a1a1a;
-        }
-
-        .hero p {
-            font-size: 18px;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto 2rem auto;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        button {
-            padding: 12px 28px;
-            font-size: 16px;
-            font-weight: 500;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: #00BEA5;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #009B87;
-            transform: translateY(-1px);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: #00BEA5;
-            border: 2px solid #00BEA5;
-        }
-
-        .btn-outline:hover {
-            background: #00BEA5;
-            color: white;
-        }
-
-        .papers {
-            margin-top: 3rem;
-        }
-
-        .papers h2 {
-            margin-bottom: 1.5rem;
-            font-size: 24px;
-        }
-
-        .paper-card {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .paper-title {
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 0.25rem;
-        }
-
-        .paper-authors {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 0.5rem;
-        }
-
-        .paper-abstract {
-            font-size: 14px;
-            color: #444;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #ddd;
-            color: #666;
-            font-size: 12px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.5; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; padding-bottom: 1rem; border-bottom: 1px solid #ddd; }
+        .logo { font-size: 1.8rem; font-weight: bold; color: #000807; font-family: 'Courier New', monospace; }
+        nav a { margin-left: 1.5rem; text-decoration: none; color: #666; }
+        nav a:hover { color: #00BEA5; }
+        .hero { text-align: center; margin: 3rem 0; }
+        .hero h1 { font-size: 48px; margin-bottom: 1rem; color: #1a1a1a; }
+        .hero p { font-size: 18px; color: #666; max-width: 600px; margin: 0 auto 2rem auto; }
+        .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        button { padding: 12px 28px; font-size: 16px; font-weight: 500; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .btn-primary { background: #00BEA5; color: white; }
+        .btn-primary:hover { background: #009B87; transform: translateY(-1px); }
+        .btn-outline { background: transparent; color: #00BEA5; border: 2px solid #00BEA5; }
+        .btn-outline:hover { background: #00BEA5; color: white; }
+        .papers { margin-top: 3rem; }
+        .papers h2 { margin-bottom: 1.5rem; font-size: 24px; }
+        .paper-card { background: white; border: 1px solid #ddd; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
+        .paper-title { font-weight: bold; font-size: 18px; margin-bottom: 0.25rem; }
+        .paper-authors { font-size: 14px; color: #666; margin-bottom: 0.5rem; }
+        .paper-abstract { font-size: 14px; color: #444; }
+        .footer { text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #ddd; color: #666; font-size: 12px; }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <div class="logo">39 Quantum</div>
-            <nav>
-                <a href="#">Papers</a>
-            </nav>
+            <nav><a href="#">Papers</a></nav>
         </header>
 
         <div class="hero">
             <h1>Publish. Verify. Fund.</h1>
-            <p>The future of quantum research on Algorand. Upload your thesis, get AI summaries, and receive immutable timestamps.</p>
+            <p>The future of quantum research on Algorand.</p>
             <div class="btn-group">
                 <button class="btn-primary" id="connectBtn">Connect Wallet</button>
                 <button class="btn-outline" id="submitBtn">Submit Thesis</button>
@@ -187,35 +63,27 @@
 
     <script>
         let userAddress = null;
-        let connector = null;
         const API_URL = 'https://three9-quantum.onrender.com/api/research';
 
-        // WalletConnect connection
-        async function connectWalletConnect() {
-            connector = new WalletConnect.default({
-                bridge: 'https://bridge.walletconnect.org',
-                chainId: 416002  // TestNet
-            });
-
-            if (!connector.connected) {
-                await connector.createSession();
-                WalletConnectQRCodeModal.open(connector.uri, () => {
-                    console.log('QR modal closed');
-                });
+        // Simple wallet connection using window.algorand (Lute or Pera extension)
+        async function connectWallet() {
+            // Check if any Algorand wallet extension is installed
+            if (typeof window.algorand === 'undefined') {
+                alert('No Algorand wallet found.\n\nPlease install Lute Wallet from Chrome Web Store:\nhttps://chrome.google.com/webstore/detail/lute-wallet');
+                window.open('https://chrome.google.com/webstore/detail/lute-wallet', '_blank');
+                return;
             }
 
-            connector.on('connect', (error, payload) => {
-                if (error) {
-                    alert('Connection failed: ' + error.message);
-                    return;
-                }
-                WalletConnectQRCodeModal.close();
-                userAddress = payload.params[0].accounts[0];
-                alert('Connected: ' + userAddress.slice(0,6) + '...');
+            try {
+                const accounts = await window.algorand.connect();
+                userAddress = accounts[0];
                 const connectBtn = document.getElementById('connectBtn');
-                connectBtn.textContent = userAddress.slice(0,6) + '...';
+                connectBtn.textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
                 connectBtn.disabled = true;
-            });
+                alert('Wallet connected successfully!');
+            } catch (error) {
+                alert('Connection failed: ' + error.message);
+            }
         }
 
         // Load papers
@@ -289,7 +157,7 @@
         };
 
         // Connect Wallet button
-        document.getElementById('connectBtn').onclick = connectWalletConnect;
+        document.getElementById('connectBtn').onclick = connectWallet;
 
         // Load papers when page loads
         loadPapers();
