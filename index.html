@@ -5,37 +5,243 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.5; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; padding-bottom: 1rem; border-bottom: 1px solid #ddd; }
-        .logo { font-size: 1.8rem; font-weight: bold; color: #000807; font-family: 'Courier New', monospace; }
-        nav a { margin-left: 1.5rem; text-decoration: none; color: #666; }
-        nav a:hover { color: #00BEA5; }
-        .hero { text-align: center; margin: 3rem 0; }
-        .hero h1 { font-size: 48px; margin-bottom: 1rem; color: #1a1a1a; }
-        .hero p { font-size: 18px; color: #666; max-width: 600px; margin: 0 auto 2rem auto; }
-        .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-        button { padding: 12px 28px; font-size: 16px; font-weight: 500; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
-        .btn-primary { background: #00BEA5; color: white; }
-        .btn-primary:hover { background: #009B87; transform: translateY(-1px); }
-        .btn-outline { background: transparent; color: #00BEA5; border: 2px solid #00BEA5; }
-        .btn-outline:hover { background: #00BEA5; color: white; }
-        .papers { margin-top: 3rem; }
-        .papers h2 { margin-bottom: 1.5rem; font-size: 24px; }
-        .paper-card { background: white; border: 1px solid #ddd; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
-        .paper-title { font-weight: bold; font-size: 18px; margin-bottom: 0.25rem; }
-        .paper-authors { font-size: 14px; color: #666; margin-bottom: 0.5rem; }
-        .paper-abstract { font-size: 14px; color: #444; }
-        .footer { text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #ddd; color: #666; font-size: 12px; }
-        .timestamp-btn { background: #f0f0f0; color: #333; padding: 4px 12px; font-size: 12px; margin-top: 8px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #000807;
+            font-family: 'Courier New', monospace;
+        }
+
+        nav a {
+            margin-left: 1.5rem;
+            text-decoration: none;
+            color: #666;
+        }
+
+        nav a:hover {
+            color: #00BEA5;
+        }
+
+        .hero {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #00BEA5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #009B87;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #00BEA5;
+            border: 2px solid #00BEA5;
+        }
+
+        .btn-outline:hover {
+            background: #00BEA5;
+            color: white;
+        }
+
+        .papers {
+            margin-top: 3rem;
+        }
+
+        .papers h2 {
+            margin-bottom: 1.5rem;
+            font-size: 24px;
+        }
+
+        .paper-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .paper-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 0.25rem;
+        }
+
+        .paper-authors {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .paper-abstract {
+            font-size: 14px;
+            color: #444;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 12px;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: left;
+        }
+
+        .form-container h3 {
+            margin-bottom: 1.5rem;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00BEA5;
+            box-shadow: 0 0 0 2px rgba(0,190,165,0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .btn-submit {
+            background: #00BEA5;
+            color: white;
+            padding: 12px 28px;
+        }
+
+        .btn-cancel {
+            background: #e0e0e0;
+            color: #333;
+            padding: 12px 28px;
+        }
+
+        .btn-submit:hover {
+            background: #009B87;
+        }
+
+        .btn-cancel:hover {
+            background: #ccc;
+        }
+
+        .loading {
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <div class="logo">39 Quantum</div>
-            <nav><a href="#">Papers</a></nav>
+            <nav>
+                <a href="#">Papers</a>
+            </nav>
         </header>
 
         <div class="hero">
@@ -43,9 +249,40 @@
             <p>The future of quantum research on Base. Upload your thesis, get AI summaries, and timestamp on-chain.</p>
             <div class="btn-group">
                 <button class="btn-primary" id="connectBtn">Connect Wallet</button>
-                <button class="btn-outline" id="submitBtn">Submit Thesis</button>
+                <button class="btn-outline" id="showFormBtn">Submit Thesis</button>
                 <button class="btn-outline" id="viewBtn">View Papers</button>
             </div>
+        </div>
+
+        <!-- Thesis Submission Form (hidden by default) -->
+        <div id="thesisFormContainer" class="form-container hidden">
+            <h3>Submit Your Quantum Research</h3>
+            <form id="thesisForm">
+                <div class="form-group">
+                    <label for="formTitle">Thesis Title *</label>
+                    <input type="text" id="formTitle" name="title" placeholder="e.g., A Novel Approach to Quantum Error Correction" required>
+                </div>
+                <div class="form-group">
+                    <label for="formAuthors">Authors *</label>
+                    <input type="text" id="formAuthors" name="authors" placeholder="e.g., Dr. Jane Smith, Prof. Quantum Lee" required>
+                </div>
+                <div class="form-group">
+                    <label for="formInstitution">Institution (Optional)</label>
+                    <input type="text" id="formInstitution" name="institution" placeholder="e.g., MIT Quantum Research Lab">
+                </div>
+                <div class="form-group">
+                    <label for="formAbstract">Abstract *</label>
+                    <textarea id="formAbstract" name="abstract" placeholder="Paste your thesis abstract here..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="formFundingUrl">Funding URL (Optional)</label>
+                    <input type="url" id="formFundingUrl" name="fundingUrl" placeholder="https://gitcoin.co/grants/... or your funding page">
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancelFormBtn" class="btn-cancel">Cancel</button>
+                    <button type="submit" id="submitFormBtn" class="btn-submit">Publish & Timestamp</button>
+                </div>
+            </form>
         </div>
 
         <div class="papers">
@@ -67,12 +304,12 @@
         let userAddress = null;
         let provider = null;
         let signer = null;
-        const API_URL = 'https://three9-quantum.onrender.com/api/research';
+        const API_URL = window.location.origin + '/api/research';
 
-        // Connect MetaMask
+        // Connect MetaMask/OKX Wallet
         async function connectWallet() {
             if (typeof window.ethereum === 'undefined') {
-                alert('Please install MetaMask first');
+                alert('Please install MetaMask or OKX Wallet first');
                 window.open('https://metamask.io/download/', '_blank');
                 return;
             }
@@ -117,16 +354,6 @@
             }
         }
 
-        // Submit thesis data to backend
-        async function submitThesisToBackend(paperData) {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(paperData)
-            });
-            return response.json();
-        }
-
         // Create timestamp transaction on Base
         async function createBaseTimestamp(paperId, contentHash) {
             if (!signer) {
@@ -135,7 +362,6 @@
             }
             
             try {
-                // Create metadata for the timestamp
                 const metadata = JSON.stringify({
                     type: 'THESIS_TIMESTAMP',
                     paperId: paperId,
@@ -144,7 +370,6 @@
                     timestamp: Date.now()
                 });
                 
-                // Send 0 ETH transaction to self with data
                 const tx = await signer.sendTransaction({
                     to: userAddress,
                     value: 0,
@@ -160,62 +385,103 @@
             }
         }
 
-        // Submit full thesis with timestamp
-        document.getElementById('submitBtn').onclick = async () => {
+        // Generate content hash
+        async function generateHash(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
+        }
+
+        // Show form
+        document.getElementById('showFormBtn').onclick = () => {
             if (!userAddress) {
                 alert('Please connect your wallet first');
                 return;
             }
+            document.getElementById('thesisFormContainer').classList.remove('hidden');
+        };
+
+        // Cancel form
+        document.getElementById('cancelFormBtn').onclick = () => {
+            document.getElementById('thesisFormContainer').classList.add('hidden');
+            document.getElementById('thesisForm').reset();
+        };
+
+        // Submit form
+        document.getElementById('thesisForm').onsubmit = async (e) => {
+            e.preventDefault();
             
-            const title = prompt('Enter thesis title:');
-            if (!title) return;
-            const authors = prompt('Enter author names:');
-            if (!authors) return;
-            const abstract = prompt('Enter abstract:');
-            if (!abstract) return;
-            const fundingUrl = prompt('Funding URL (optional):') || '';
+            const title = document.getElementById('formTitle').value;
+            const authors = document.getElementById('formAuthors').value;
+            const institution = document.getElementById('formInstitution').value;
+            const abstract = document.getElementById('formAbstract').value;
+            const fundingUrl = document.getElementById('formFundingUrl').value;
             
-            // Generate content hash
-            const contentHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(abstract));
-            const hashHex = Array.from(new Uint8Array(contentHash)).map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
-            
-            // Create timestamp (user pays gas fees)
-            const txHash = await createBaseTimestamp(Date.now(), hashHex);
-            
-            if (!txHash) {
-                alert('Timestamp creation failed. Thesis not submitted.');
+            if (!title || !authors || !abstract) {
+                alert('Please fill in all required fields');
                 return;
             }
             
-            // Submit to backend
-            const newPaper = { 
-                title, authors, abstract, fundingUrl, 
-                authorWallet: userAddress, 
-                txHash: txHash,
-                contentHash: hashHex
-            };
+            // Hide form
+            document.getElementById('thesisFormContainer').classList.add('hidden');
+            
+            // Show loading state
+            const submitBtn = document.getElementById('submitFormBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Preparing...';
+            submitBtn.disabled = true;
             
             try {
+                const contentHash = await generateHash(abstract);
+                
+                if (!confirm('This will open your wallet to approve a transaction. You will pay a small gas fee in ETH. Continue?')) {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    document.getElementById('thesisForm').reset();
+                    return;
+                }
+                
+                submitBtn.textContent = 'Creating timestamp...';
+                
+                const txHash = await createBaseTimestamp(Date.now(), contentHash);
+                
+                if (!txHash) {
+                    throw new Error('Transaction was not completed');
+                }
+                
+                submitBtn.textContent = 'Submitting...';
+                
+                const newPaper = { 
+                    title, authors, institution, abstract, fundingUrl, 
+                    authorWallet: userAddress, 
+                    txHash: txHash,
+                    contentHash: contentHash
+                };
+                
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newPaper)
                 });
+                
                 if (response.ok) {
-                    alert('✅ Thesis submitted and timestamped on Base!\nTransaction: ' + txHash.slice(0,10) + '...');
+                    alert('✅ Thesis submitted and timestamped!\nTransaction: ' + txHash.slice(0,10) + '...');
+                    document.getElementById('thesisForm').reset();
                     loadPapers();
                 } else {
                     alert('❌ Submission failed');
                 }
             } catch (error) {
                 alert('Error: ' + error.message);
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             }
         };
 
-        // View Papers
-        document.getElementById('viewBtn').onclick = () => loadPapers();
-
-        // Load papers from backend
+        // Load papers
         async function loadPapers() {
             const papersDiv = document.getElementById('papersList');
             papersDiv.innerHTML = 'Loading...';
@@ -235,7 +501,7 @@
                     </div>
                 `).join('');
             } catch (error) {
-                papersDiv.innerHTML = '<div class="paper-card">Error loading papers.</div>';
+                papersDiv.innerHTML = '<div class="paper-card">Error loading papers. Backend may be starting up.</div>';
             }
         }
 
@@ -250,6 +516,8 @@
         }
 
         document.getElementById('connectBtn').onclick = connectWallet;
+        document.getElementById('viewBtn').onclick = loadPapers;
+        
         loadPapers();
     </script>
 </body>
