@@ -28,10 +28,7 @@
         .paper-authors { font-size: 14px; color: #666; margin-bottom: 0.5rem; }
         .paper-abstract { font-size: 14px; color: #444; }
         .footer { text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #ddd; color: #666; font-size: 12px; }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 25px; border-radius: 16px; text-align: center; max-width: 350px; }
-        .modal-content img { width: 200px; height: 200px; margin: 10px 0; }
-        .modal-content button { margin-top: 15px; background: #00BEA5; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; }
+        .timestamp-btn { background: #f0f0f0; color: #333; padding: 4px 12px; font-size: 12px; margin-top: 8px; }
     </style>
 </head>
 <body>
@@ -43,7 +40,7 @@
 
         <div class="hero">
             <h1>Publish. Verify. Fund.</h1>
-            <p>The future of quantum research on Algorand. Upload your thesis, get AI summaries, and receive immutable timestamps.</p>
+            <p>The future of quantum research on Base. Upload your thesis, get AI summaries, and timestamp on-chain.</p>
             <div class="btn-group">
                 <button class="btn-primary" id="connectBtn">Connect Wallet</button>
                 <button class="btn-outline" id="submitBtn">Submit Thesis</button>
@@ -57,7 +54,7 @@
         </div>
         
         <div class="footer">
-            <p>© 2026 39 Quantum · Built on Algorand</p>
+            <p>© 2026 39 Quantum · Built on Base</p>
             <p style="margin-top: 10px;">
                 <a href="https://github.com/39-q" target="_blank" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">GitHub</a>
                 <a href="#" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">Twitter</a>
@@ -65,79 +62,160 @@
         </div>
     </div>
 
-    <!-- WalletConnect Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/client@1.8.0/dist/umd/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.0/dist/ethers.umd.min.js"></script>
     <script>
         let userAddress = null;
-        let connector = null;
+        let provider = null;
+        let signer = null;
         const API_URL = 'https://three9-quantum.onrender.com/api/research';
 
+        // Connect MetaMask
         async function connectWallet() {
+            if (typeof window.ethereum === 'undefined') {
+                alert('Please install MetaMask first');
+                window.open('https://metamask.io/download/', '_blank');
+                return;
+            }
+            
             try {
-                const WalletConnectLib = window.WalletConnect.default || window.WalletConnect;
+                provider = new ethers.BrowserProvider(window.ethereum);
+                const accounts = await provider.send("eth_requestAccounts", []);
+                userAddress = accounts[0];
+                signer = await provider.getSigner();
                 
-                connector = new WalletConnectLib({
-                    bridge: 'https://bridge.walletconnect.org',
-                    chainId: 4160,  // Universal Algorand chain ID
-                    ttl: 86400,      // 24 hour timeout
-                    clientMeta: {
-                        name: '39 Quantum',
-                        description: 'Quantum Research Platform',
-                        url: window.location.origin,
-                        icons: []
-                    }
-                });
-
-                if (!connector.connected) {
-                    await connector.createSession();
-                    const qrUrl = connector.uri;
-                    
-                    const modalDiv = document.createElement('div');
-                    modalDiv.className = 'modal';
-                    modalDiv.id = 'qrModal';
-                    modalDiv.innerHTML = `
-                        <div class="modal-content">
-                            <h3>Scan with Pera Wallet</h3>
-                            <div id="qrCode"></div>
-                            <p style="margin: 15px 0;">Open Pera Wallet → Scan QR code</p>
-                            <p style="font-size: 12px; color: #666;">Make sure your wallet is on TestNet</p>
-                            <button id="closeModalBtn">Close</button>
-                        </div>
-                    `;
-                    document.body.appendChild(modalDiv);
-                    
-                                    new QRCode(document.getElementById('qrCode'), {
-                        text: qrUrl,
-                        width: 200,
-                        height: 200
-                    });
-                    
-                    document.getElementById('closeModalBtn').onclick = () => modalDiv.remove();
-                }
-
-                connector.on('connect', (error, payload) => {
-                    if (error) {
-                        alert('Connection failed: ' + error.message);
-                        return;
-                    }
-                    const modal = document.getElementById('qrModal');
-                    if (modal) modal.remove();
-                    
-                    userAddress = payload.params[0].accounts[0];
-                    const connectBtn = document.getElementById('connectBtn');
-                    connectBtn.textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
-                    connectBtn.disabled = true;
-                    alert('Wallet connected! You can now submit theses.');
-                });
+                // Switch to Base network
+                await switchToBaseNetwork();
                 
+                const connectBtn = document.getElementById('connectBtn');
+                connectBtn.textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
+                connectBtn.disabled = true;
+                alert('Wallet connected to Base!');
             } catch (error) {
-                console.error(error);
-                alert('Error: ' + error.message);
+                alert('Connection failed: ' + error.message);
             }
         }
 
+        async function switchToBaseNetwork() {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: '0x2105' }] // Base Mainnet
+                });
+            } catch (error) {
+                if (error.code === 4902) {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{
+                            chainName: 'Base',
+                            chainId: '0x2105',
+                            nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                            rpcUrls: ['https://mainnet.base.org'],
+                            blockExplorerUrls: ['https://basescan.org']
+                        }]
+                    });
+                }
+            }
+        }
+
+        // Submit thesis data to backend
+        async function submitThesisToBackend(paperData) {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(paperData)
+            });
+            return response.json();
+        }
+
+        // Create timestamp transaction on Base
+        async function createBaseTimestamp(paperId, contentHash) {
+            if (!signer) {
+                alert('Please connect wallet first');
+                return null;
+            }
+            
+            try {
+                // Create metadata for the timestamp
+                const metadata = JSON.stringify({
+                    type: 'THESIS_TIMESTAMP',
+                    paperId: paperId,
+                    hash: contentHash,
+                    platform: '39 Quantum',
+                    timestamp: Date.now()
+                });
+                
+                // Send 0 ETH transaction to self with data
+                const tx = await signer.sendTransaction({
+                    to: userAddress,
+                    value: 0,
+                    data: ethers.toUtf8Bytes(metadata)
+                });
+                
+                await tx.wait();
+                return tx.hash;
+            } catch (error) {
+                console.error('Timestamp error:', error);
+                alert('Failed to create timestamp: ' + error.message);
+                return null;
+            }
+        }
+
+        // Submit full thesis with timestamp
+        document.getElementById('submitBtn').onclick = async () => {
+            if (!userAddress) {
+                alert('Please connect your wallet first');
+                return;
+            }
+            
+            const title = prompt('Enter thesis title:');
+            if (!title) return;
+            const authors = prompt('Enter author names:');
+            if (!authors) return;
+            const abstract = prompt('Enter abstract:');
+            if (!abstract) return;
+            const fundingUrl = prompt('Funding URL (optional):') || '';
+            
+            // Generate content hash
+            const contentHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(abstract));
+            const hashHex = Array.from(new Uint8Array(contentHash)).map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
+            
+            // Create timestamp (user pays gas fees)
+            const txHash = await createBaseTimestamp(Date.now(), hashHex);
+            
+            if (!txHash) {
+                alert('Timestamp creation failed. Thesis not submitted.');
+                return;
+            }
+            
+            // Submit to backend
+            const newPaper = { 
+                title, authors, abstract, fundingUrl, 
+                authorWallet: userAddress, 
+                txHash: txHash,
+                contentHash: hashHex
+            };
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newPaper)
+                });
+                if (response.ok) {
+                    alert('✅ Thesis submitted and timestamped on Base!\nTransaction: ' + txHash.slice(0,10) + '...');
+                    loadPapers();
+                } else {
+                    alert('❌ Submission failed');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        };
+
+        // View Papers
+        document.getElementById('viewBtn').onclick = () => loadPapers();
+
+        // Load papers from backend
         async function loadPapers() {
             const papersDiv = document.getElementById('papersList');
             papersDiv.innerHTML = 'Loading...';
@@ -153,10 +231,11 @@
                         <div class="paper-title">${escapeHtml(paper.title)}</div>
                         <div class="paper-authors">${paper.authors || 'Anonymous'} ${paper.institution ? `· ${paper.institution}` : ''}</div>
                         <div class="paper-abstract">${escapeHtml(paper.abstract?.substring(0, 200) || '')}...</div>
+                        ${paper.txHash ? `<div><a href="https://basescan.org/tx/${paper.txHash}" target="_blank" style="font-size:12px; color:#00BEA5;">🔗 View on BaseScan</a></div>` : ''}
                     </div>
                 `).join('');
             } catch (error) {
-                papersDiv.innerHTML = '<div class="paper-card">Error loading papers. Backend may be starting up.</div>';
+                papersDiv.innerHTML = '<div class="paper-card">Error loading papers.</div>';
             }
         }
 
@@ -170,40 +249,7 @@
             });
         }
 
-        document.getElementById('submitBtn').onclick = async () => {
-            if (!userAddress) {
-                alert('Please connect your wallet first');
-                return;
-            }
-            const title = prompt('Enter thesis title:');
-            if (!title) return;
-            const authors = prompt('Enter author names:');
-            if (!authors) return;
-            const abstract = prompt('Enter abstract:');
-            if (!abstract) return;
-            const fundingUrl = prompt('Funding URL (optional):') || '';
-
-            const newPaper = { title, authors, abstract, fundingUrl, authorWallet: userAddress };
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newPaper)
-                });
-                if (response.ok) {
-                    alert('✅ Thesis submitted successfully!');
-                    loadPapers();
-                } else {
-                    alert('❌ Submission failed');
-                }
-            } catch (error) {
-                alert('Error: ' + error.message);
-            }
-        };
-
-        document.getElementById('viewBtn').onclick = () => loadPapers();
         document.getElementById('connectBtn').onclick = connectWallet;
-        
         loadPapers();
     </script>
 </body>
