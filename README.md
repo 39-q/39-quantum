@@ -30,7 +30,7 @@ Quantum research is hard to fund. Patents lock up technology. Researchers in dev
 1. **User submits a thesis** (title, authors, abstract, funding URL)
 2. **Backend calls Llama 3.2 AI** via OpenRouter to generate a simplified summary
 3. **Thesis + summary are saved** to the backend
-4. **User connects Pera Wallet** to optionally pay 0.001 ALGO for an Algorand timestamp
+4. **User connect Metamask or another Base compatible wallet** to pay for only the Base chain gas fees
 5. **Papers are displayed publicly** for readers and potential funders
 
 ---
@@ -41,10 +41,10 @@ Quantum research is hard to fund. Patents lock up technology. Researchers in dev
 |-------|------------|
 | Frontend | HTML, CSS, JavaScript |
 | Backend | Node.js, Express |
-| Blockchain | Algorand (testnet/mainnet) |
+| Blockchain | Base (testnet/mainnet) |
 | AI | Llama 3.2 3B via OpenRouter |
 | Hosting | Render |
-| Wallet | Pera Wallet |
+| Wallet | Metamask |
 
 ---
 
@@ -58,7 +58,7 @@ Quantum research is hard to fund. Patents lock up technology. Researchers in dev
 
 - [x] Thesis submission form
 - [x] AI summary generation
-- [x] Algorand timestamping
+- [x] Base timestamping
 - [x] Papers list display
 - [ ] Custom domain (39quantum.org)
 - [ ] Email notifications for funders
@@ -70,7 +70,7 @@ Quantum research is hard to fund. Patents lock up technology. Researchers in dev
 
 This is a solo project, but issues and suggestions are welcome.
 
-Open an issue or DM on [X](https://x.com/39quantum)
+Open an issue or DM on [X](https://x.com/quantum_39)
 
 ---
 
