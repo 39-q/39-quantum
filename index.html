@@ -12,11 +12,10 @@
         }
 
         body {
-            
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            background: #f5f5f5;
+            background: #f8f9fa;
             color: #1a1a1a;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .container {
@@ -25,53 +24,50 @@
             padding: 2rem;
         }
 
-        /* Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 3rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #e5e5e5;
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            color: #000807;
-            font-family: 'Courier New', monospace;
+            color: #1a2a3a;
+            text-decoration: none;
         }
 
         nav a {
             margin-left: 1.5rem;
             text-decoration: none;
-            color: #666;
+            color: #4a5568;
         }
 
         nav a:hover {
-            color: #00BEA5;
+            color: #1a2a3a;
         }
 
-        /* Hero Section */
         .hero {
-            text-align: left;
+            text-align: center;
             margin: 3rem 0;
         }
 
         .hero h1 {
-            font-size: 48px;
+            font-size: 2.5rem;
             margin-bottom: 1rem;
             color: #1a1a1a;
         }
 
         .hero p {
-            font-size: 18px;
-            color: #666;
+            font-size: 1.125rem;
+            color: #4a5568;
             max-width: 600px;
             margin: 0 auto 2rem auto;
         }
 
-        /* Buttons */
         .btn-group {
             display: flex;
             gap: 1rem;
@@ -79,101 +75,116 @@
             flex-wrap: wrap;
         }
 
-        button {
-            padding: 12px 28px;
-            font-size: 16px;
-            font-weight: 500;
-            border: none;
-            border-radius: 8px;
+        .btn-primary, .btn-outline {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            text-decoration: none;
             cursor: pointer;
-            transition: all 0.2s;
+            border: none;
+            transition: background 0.2s;
         }
 
         .btn-primary {
-            background: #00BEA5;
+            background: #1a2a3a;
             color: white;
         }
 
         .btn-primary:hover {
-            background: #009B87;
-            transform: translateY(-1px);
+            background: #2c3e50;
         }
 
         .btn-outline {
             background: transparent;
-            color: #00BEA5;
-            border: 2px solid #00BEA5;
+            color: #1a2a3a;
+            border: 1px solid #1a2a3a;
         }
 
         .btn-outline:hover {
-            background: #00BEA5;
+            background: #1a2a3a;
             color: white;
         }
 
-        /* Papers Section */
         .papers {
             margin-top: 3rem;
         }
 
         .papers h2 {
+            font-size: 1.5rem;
             margin-bottom: 1.5rem;
-            font-size: 24px;
         }
 
         .paper-card {
             background: white;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            padding: 1rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 1.5rem;
             margin-bottom: 1rem;
         }
 
         .paper-title {
             font-weight: bold;
-            font-size: 18px;
+            font-size: 1.125rem;
             margin-bottom: 0.25rem;
         }
 
         .paper-authors {
-            font-size: 14px;
-            color: #666;
+            font-size: 0.9rem;
+            color: #6b7280;
             margin-bottom: 0.5rem;
         }
 
         .paper-abstract {
-            font-size: 14px;
-            color: #444;
+            font-size: 0.95rem;
+            color: #4a5568;
         }
 
-        /* Footer */
+        .paper-link {
+            display: inline-block;
+            margin-top: 0.75rem;
+            color: #1a2a3a;
+            text-decoration: underline;
+            font-size: 0.9rem;
+        }
+
+        .paper-link:hover {
+            text-decoration: none;
+        }
+
         .footer {
             text-align: center;
             margin-top: 3rem;
             padding-top: 1.5rem;
-            border-top: 1px solid #ddd;
-            color: #666;
-            font-size: 12px;
+            border-top: 1px solid #e5e5e5;
+            color: #6b7280;
+            font-size: 0.8rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="logo">39 Quantum</div>
+            <a href="/" class="logo">39 Quantum</a>
             <nav>
+<<<<<<< HEAD
                 <a href="#">Papers</a>
                 <a href="#">About</a>
                 <a href="#">Socials</a>
+=======
+                <a href="/">Explore</a>
+                <a href="/explanations.html">Explanations</a>
+                <a href="/add-explanation.html">Write Explanation</a>
+>>>>>>> 43400a4cd83ba870c282874e8364e80c8ccdfca9
             </nav>
         </header>
 
         <div class="hero">
-            <h1>Publish. Verify. Fund.</h1>
-            <p>The future of quantum research on Algorand. Upload your thesis, get AI summaries, and receive immutable timestamps.</p>
+            <h1>Research. Explain. Fund.</h1>
+            <p>The future of quantum research on Base. Read, discuss, and publish about a revolutionary field.</p>
             <div class="btn-group">
-                <button class="btn-primary" id="connectBtn">Connect Wallet</button>
-                <button class="btn-outline" id="submitBtn">Submit Thesis</button>
-                <button class="btn-outline" id="viewBtn">View Papers</button>
+                <a href="/explanations.html" class="btn-primary">Explore Explanations</a>
+                <a href="/add-explanation.html" class="btn-outline">Write Explanation</a>
             </div>
         </div>
 
@@ -181,21 +192,15 @@
             <h2>Recent Papers</h2>
             <div id="papersList">Loading papers...</div>
         </div>
-        
-    <div class="footer">
-    <p>© 2026 39 Quantum · Built on Algorand</p>
-    <p style="margin-top: 10px;">
-        <a href="https://github.com/39-q" target="_blank" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">GitHub</a>
-        <a href="#" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">Twitter</a>
-    </p>
-</div>
 
-    <script src="https://connect.perawallet.app/1.0.0/pera-wallet-connect.min.js"></script>
+        <div class="footer">
+            <p>© 2026 39 Quantum · Read. Publish. Explain.</p>
+        </div>
+    </div>
+
     <script>
-        let userAddress = null;
-        const API_URL = 'https://three9-quantum.onrender.com/api/research';
+        const API_URL = '/api/research';
 
-        // Load papers on page load
         async function loadPapers() {
             const papersDiv = document.getElementById('papersList');
             papersDiv.innerHTML = 'Loading...';
@@ -211,10 +216,11 @@
                         <div class="paper-title">${escapeHtml(paper.title)}</div>
                         <div class="paper-authors">${paper.authors || 'Anonymous'} ${paper.institution ? `· ${paper.institution}` : ''}</div>
                         <div class="paper-abstract">${escapeHtml(paper.abstract?.substring(0, 200) || '')}...</div>
+                        <a href="/explanations.html" class="paper-link">Read community explanations →</a>
                     </div>
                 `).join('');
             } catch (error) {
-                papersDiv.innerHTML = '<div class="paper-card">Error loading papers. Backend may be starting up.</div>';
+                papersDiv.innerHTML = '<div class="paper-card">Error loading papers.</div>';
             }
         }
 
@@ -228,63 +234,6 @@
             });
         }
 
-        // Connect Wallet
-        document.getElementById('connectBtn').onclick = async () => {
-            if (typeof window.peraWallet === 'undefined') {
-                alert('⚠️ Pera Wallet not installed.\n\nInstall from: perawallet.app');
-                window.open('https://perawallet.app/download', '_blank');
-                return;
-            }
-            try {
-                const accounts = await window.peraWallet.connect();
-                userAddress = accounts[0];
-                const btn = document.getElementById('connectBtn');
-                btn.textContent = `✅ ${userAddress.slice(0,6)}...`;
-                btn.disabled = true;
-                alert('Wallet connected successfully!');
-            } catch (error) {
-                alert('Connection failed: ' + error.message);
-            }
-        };
-
-        // Submit Thesis
-        document.getElementById('submitBtn').onclick = async () => {
-            if (!userAddress) {
-                alert('Please connect your wallet first');
-                return;
-            }
-            const title = prompt('Enter thesis title:');
-            if (!title) return;
-            const authors = prompt('Enter author names:');
-            if (!authors) return;
-            const abstract = prompt('Enter abstract:');
-            if (!abstract) return;
-            const fundingUrl = prompt('Funding URL (optional):') || '';
-
-            const newPaper = { title, authors, abstract, fundingUrl, authorWallet: userAddress };
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newPaper)
-                });
-                if (response.ok) {
-                    alert('✅ Thesis submitted successfully!');
-                    loadPapers();
-                } else {
-                    alert('❌ Submission failed');
-                }
-            } catch (error) {
-                alert('Error: ' + error.message);
-            }
-        };
-
-        // View Papers
-        document.getElementById('viewBtn').onclick = () => {
-            loadPapers();
-        };
-
-        // Load papers when page loads
         loadPapers();
     </script>
 </body>

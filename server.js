@@ -1,44 +1,58 @@
 const express = require('express');
 const fs = require('fs').promises;
-const path = require('path');
 const cors = require('cors');
 const crypto = require('crypto');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
 const DATA_FILE = path.join(__dirname, 'research-log.json');
+const EXPLANATIONS_FILE = path.join(__dirname, 'explanations.json');
 
-// OpenRouter Configuration - Llama 3.2 3B (FREE)
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const FREE_MODEL = 'meta-llama/llama-3.2-3b-instruct:free';
+// ============================================
+// EXPLANATIONS (New Feature)
+// ============================================
 
+<<<<<<< HEAD
 // Algorand Indexer (public, for verification only)
 const ALGORAND_INDEXER = 'https://mainnet-idx.algonode.cloud';
 
 // Initialize data file
 async function initDataFile() {
+=======
+// Helper functions for explanations
+async function loadExplanations() {
+>>>>>>> 43400a4cd83ba870c282874e8364e80c8ccdfca9
     try {
-        await fs.access(DATA_FILE);
+        const data = await fs.readFile(EXPLANATIONS_FILE, 'utf8');
+        return JSON.parse(data);
     } catch {
-        await fs.writeFile(DATA_FILE, JSON.stringify([], null, 2));
+        return [];
     }
 }
 
+<<<<<<< HEAD
 // Generate AI summary using Llama 3.2 3B (Free)
 async function generateAISummary(abstract, title) {
     if (!OPENROUTER_API_KEY) {
         console.log('  No OpenRouter API key - using fallback summary');
         return `  AI Summary: ${abstract.substring(0, 200)}... To enable free Llama 3.2 AI summaries, add your OpenRouter API key (free signup at openrouter.io).`;
     }
+=======
+async function saveExplanations(explanations) {
+    await fs.writeFile(EXPLANATIONS_FILE, JSON.stringify(explanations, null, 2));
+}
+>>>>>>> 43400a4cd83ba870c282874e8364e80c8ccdfca9
 
+// GET all explanations
+app.get('/api/explanations', async (req, res) => {
     try {
+<<<<<<< HEAD
         const response = await fetch(OPENROUTER_URL, {
             method: 'POST',
             headers: {
@@ -80,8 +94,60 @@ async function generateAISummary(abstract, title) {
     } catch (error) {
         console.error('OpenRouter error:', error);
         return ` Quick Summary: ${abstract.substring(0, 200)}... (Llama 3.2 AI temporarily unavailable, but the quantum research is still groundbreaking!)`;
+=======
+        const explanations = await loadExplanations();
+        res.json(explanations);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load explanations' });
+>>>>>>> 43400a4cd83ba870c282874e8364e80c8ccdfca9
     }
-}
+});
+
+// POST a new explanation
+app.post('/api/explanations', async (req, res) => {
+    try {
+        const { title, arxiv_id, content, author } = req.body;
+        if (!arxiv_id || !title || !content) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        const explanations = await loadExplanations();
+        const newExplanation = {
+            id: Date.now(),
+            title,
+            arxiv_id,
+            content,
+            author: author || 'Anonymous',
+            timestamp: new Date().toISOString(),
+            upvotes: 0,
+            comments: []
+        };
+        explanations.unshift(newExplanation);
+        await saveExplanations(explanations);
+        res.status(201).json(newExplanation);
+    } catch (error) {
+        console.error('Error saving explanation:', error);
+        res.status(500).json({ error: 'Failed to save explanation' });
+    }
+});
+
+// GET a single explanation by ID
+app.get('/api/explanations/:id', async (req, res) => {
+    try {
+        const explanations = await loadExplanations();
+        const explanation = explanations.find(e => e.id == req.params.id);
+        if (!explanation) {
+            return res.status(404).json({ error: 'Explanation not found' });
+        }
+        res.json(explanation);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load explanation' });
+    }
+});
+
+// ============================================
+// RESEARCH PAPERS (Existing Feature)
+// ============================================
 
 // Generate hash for thesis content
 function generateHash(content) {
@@ -133,23 +199,36 @@ app.get('/api/research', async (req, res) => {
         const papers = JSON.parse(data);
         res.json(papers);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to load research' });
+        res.json([]);
     }
 });
 
+<<<<<<< HEAD
 // POST new research paper (user submits thesis, timestamp can be added later)
+=======
+// POST a new research paper
+>>>>>>> 43400a4cd83ba870c282874e8364e80c8ccdfca9
 app.post('/api/research', async (req, res) => {
     try {
         const { title, authors, institution, abstract, fundingUrl, authorWallet } = req.body;
         
+<<<<<<< HEAD
         console.log(` Processing new paper: ${title}`);
+=======
+        if (!title || !abstract) {
+            return res.status(400).json({ error: 'Title and abstract are required' });
+        }
+>>>>>>> 43400a4cd83ba870c282874e8364e80c8ccdfca9
         
         const paperId = Date.now();
         const contentHash = generateHash(abstract);
         
+<<<<<<< HEAD
         console.log(` Generating Llama 3.2 summary...`);
         const aiSummary = await generateAISummary(abstract, title);
         
+=======
+>>>>>>> 43400a4cd83ba870c282874e8364e80c8ccdfca9
         const newPaper = {
             id: paperId,
             title,
@@ -158,29 +237,40 @@ app.post('/api/research', async (req, res) => {
             abstract,
             fundingUrl: fundingUrl || null,
             authorWallet: authorWallet || null,
-            aiSummary,
             contentHash: contentHash,
             timestamp: new Date().toISOString(),
+<<<<<<< HEAD
             views: 0,
             fundedAmount: 0,
             model: 'Llama 3.2 3B (Free)',
             algorandTimestamp: null  // No timestamp yet, user can add later
+=======
+            views: 0
+>>>>>>> 43400a4cd83ba870c282874e8364e80c8ccdfca9
         };
         
-        const data = await fs.readFile(DATA_FILE, 'utf8');
-        const papers = JSON.parse(data);
+        let papers = [];
+        try {
+            const data = await fs.readFile(DATA_FILE, 'utf8');
+            papers = JSON.parse(data);
+        } catch {}
+        
         papers.unshift(newPaper);
         await fs.writeFile(DATA_FILE, JSON.stringify(papers, null, 2));
         
+<<<<<<< HEAD
         console.log(`✅ Paper published! ID: ${paperId}`);
         
+=======
+>>>>>>> 43400a4cd83ba870c282874e8364e80c8ccdfca9
         res.status(201).json(newPaper);
     } catch (error) {
-        console.error('Error saving paper:', error);
+        console.error('Error saving research:', error);
         res.status(500).json({ error: 'Failed to save research' });
     }
 });
 
+<<<<<<< HEAD
 // Add or update Algorand timestamp for a paper
 app.post('/api/research/:id/timestamp', async (req, res) => {
     try {
@@ -248,14 +338,18 @@ app.post('/api/verify-transaction', async (req, res) => {
 
 // Regenerate AI summary for existing paper
 app.post('/api/regenerate-summary/:id', async (req, res) => {
+=======
+// GET a single paper by ID
+app.get('/api/research/:id', async (req, res) => {
+>>>>>>> 43400a4cd83ba870c282874e8364e80c8ccdfca9
     try {
         const data = await fs.readFile(DATA_FILE, 'utf8');
         const papers = JSON.parse(data);
-        const paperIndex = papers.findIndex(p => p.id == req.params.id);
-        
-        if (paperIndex === -1) {
+        const paper = papers.find(p => p.id == req.params.id);
+        if (!paper) {
             return res.status(404).json({ error: 'Paper not found' });
         }
+<<<<<<< HEAD
         
         console.log(` Regenerating summary for paper ${req.params.id}`);
         const newSummary = await generateAISummary(papers[paperIndex].abstract, papers[paperIndex].title);
@@ -263,8 +357,11 @@ app.post('/api/regenerate-summary/:id', async (req, res) => {
         await fs.writeFile(DATA_FILE, JSON.stringify(papers, null, 2));
         
         res.json({ success: true, summary: newSummary });
+=======
+        res.json(paper);
+>>>>>>> 43400a4cd83ba870c282874e8364e80c8ccdfca9
     } catch (error) {
-        res.status(500).json({ error: 'Failed to regenerate summary' });
+        res.status(500).json({ error: 'Failed to load paper' });
     }
 });
 
@@ -275,7 +372,7 @@ app.post('/api/view/:id', async (req, res) => {
         const papers = JSON.parse(data);
         const paper = papers.find(p => p.id == req.params.id);
         if (paper) {
-            paper.views++;
+            paper.views = (paper.views || 0) + 1;
             await fs.writeFile(DATA_FILE, JSON.stringify(papers, null, 2));
         }
         res.json({ success: true });
@@ -284,6 +381,7 @@ app.post('/api/view/:id', async (req, res) => {
     }
 });
 
+<<<<<<< HEAD
 // Get system stats
 app.get('/api/stats', async (req, res) => {
     try {
@@ -321,3 +419,16 @@ initDataFile().then(() => {
         }
     });
 });
+=======
+// ============================================
+// SERVER START
+// ============================================
+
+app.listen(PORT, () => {
+    console.log(`\n 39 Quantum running on port ${PORT}`);
+    console.log(` Research data: ${DATA_FILE}`);
+    console.log(` Explanations data: ${EXPLANATIONS_FILE}`);
+    console.log(` AI summaries: REMOVED (community-driven now)`);
+    console.log(`\n Read. Publish. Explain.`);
+});
+>>>>>>> 43400a4cd83ba870c282874e8364e80c8ccdfca9
