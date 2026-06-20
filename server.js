@@ -177,6 +177,11 @@ app.get('/add-explanation.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'add-explanation.html'));
 });
 
+// Serve individual explanation page
+app.get('/explanation/:id', (req, res) => {
+    res.sendFile(__dirname + '/explanation.html');
+});
+
 // Start server
 app.listen(PORT, () => {
     console.log(`\n 39 Quantum running on port ${PORT}`);
