@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Explanations - 39 Quantum</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #f8f9fa; color: #1a1a1a; line-height: 1.6; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e5e5; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #1a2a3a; text-decoration: none; }
+        nav a { margin-left: 1.5rem; text-decoration: none; color: #4a5568; }
+        nav a:hover { color: #1a2a3a; }
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .subtitle { color: #4a5568; margin-bottom: 2rem; }
+        .explanation-card { background: white; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .explanation-card h2 { margin-bottom: 0.5rem; font-size: 1.25rem; }
+        .explanation-card .meta { color: #6b7280; font-size: 0.85rem; margin-bottom: 0.75rem; }
+        .explanation-card .arxiv-link { color: #1a2a3a; text-decoration: underline; }
+        .explanation-card .content { margin: 1rem 0; }
+        .btn { display: inline-block; background: #1a2a3a; color: white; padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 0.9rem; }
+        .btn:hover { background: #2c3e50; }
+        .btn-outline { background: transparent; color: #1a2a3a; border: 1px solid #1a2a3a; }
+        .btn-outline:hover { background: #1a2a3a; color: white; }
+        .empty-state { text-align: center; padding: 3rem; color: #6b7280; }
+        .footer { text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #e5e5e5; color: #6b7280; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="logo">39 Quantum</a>
+            <nav>
+                <a href="/">Explore</a>
+                <a href="/explanations.html">Explanations</a>
+                <a href="/add-explanation.html">Write Explanation</a>
+            </nav>
+        </header>
+
+        <h1>Community Explanations</h1>
+        <p class="subtitle">Read explanations of quantum research papers, written by the community.</p>
+
+        <div id="explanationsList">Loading explanations...</div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="/add-explanation.html" class="btn">Write Your Own Explanation</a>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 39 Quantum · Read. Publish. Explain.</p>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api/explanations';
+
+        async function loadExplanations() {
+            const container = document.getElementById('explanationsList');
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                if (data.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><p>No explanations yet. Be the first to write one!</p></div>';
+                    return;
+                }
+                container.innerHTML = data.map(e => `
+                    <div class="explanation-card">
+                        <h2>${escapeHtml(e.title)}</h2>
+                        <div class="meta">
+                            By: ${escapeHtml(e.author)} · ${new Date(e.timestamp).toLocaleDateString()}
+                            ${e.arxiv_id ? ` · <a href="https://arxiv.org/abs/${e.arxiv_id}" target="_blank" class="arxiv-link">View Original Paper</a>` : ''}
+                        </div>
+                        <div class="content">${escapeHtml(e.content.substring(0, 300))}${e.content.length > 300 ? '...' : ''}</div>
+                        <a href="/explanation/${e.id}" class="btn btn-outline">Read Full</a>
+                    </div>
+                `).join('');
+            } catch (error) {
+                container.innerHTML = '<div class="empty-state"><p>Error loading explanations. Please try again.</p></div>';
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        loadExplanations();
+    </script>
+</body>
+</html>
