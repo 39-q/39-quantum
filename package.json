@@ -1,6 +1,8 @@
 {
-  "name": "39-quantum-base",
+  "name": "39-quantum",
   "version": "1.0.0",
+  "description": "Read, discuss, and publish about quantum research",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
