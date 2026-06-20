@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs').promises;
 const cors = require('cors');
 const crypto = require('crypto');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,54 +11,110 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
-const DATA_FILE = 'research-log.json';
+const DATA_FILE = path.join(__dirname, 'research-log.json');
+const EXPLANATIONS_FILE = path.join(__dirname, 'explanations.json');
 
-// OpenRouter Configuration
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const FREE_MODEL = 'meta-llama/llama-3.2-3b-instruct:free';
+// ============================================
+// EXPLANATIONS (New Feature)
+// ============================================
 
-async function generateAISummary(abstract, title) {
-    if (!OPENROUTER_API_KEY) {
-        return `✨ AI Summary: ${abstract.substring(0, 200)}... Add OpenRouter API key to enable AI summaries.`;
-    }
+// Helper functions for explanations
+async function loadExplanations() {
     try {
-        const response = await fetch(OPENROUTER_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${OPENROUTER_API_KEY}`
-            },
-            body: JSON.stringify({
-                model: FREE_MODEL,
-                messages: [{
-                    role: 'user',
-                    content: `Simplify this quantum thesis:\nTitle: ${title}\n\nAbstract: ${abstract}`
-                }]
-            })
-        });
-        const data = await response.json();
-        return `🦙 AI Summary: ${data.choices[0].message.content}`;
-    } catch (error) {
-        return `✨ Quick Summary: ${abstract.substring(0, 200)}...`;
+        const data = await fs.readFile(EXPLANATIONS_FILE, 'utf8');
+        return JSON.parse(data);
+    } catch {
+        return [];
     }
 }
 
+async function saveExplanations(explanations) {
+    await fs.writeFile(EXPLANATIONS_FILE, JSON.stringify(explanations, null, 2));
+}
+
+// GET all explanations
+app.get('/api/explanations', async (req, res) => {
+    try {
+        const explanations = await loadExplanations();
+        res.json(explanations);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load explanations' });
+    }
+});
+
+// POST a new explanation
+app.post('/api/explanations', async (req, res) => {
+    try {
+        const { title, arxiv_id, content, author } = req.body;
+        if (!arxiv_id || !title || !content) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        const explanations = await loadExplanations();
+        const newExplanation = {
+            id: Date.now(),
+            title,
+            arxiv_id,
+            content,
+            author: author || 'Anonymous',
+            timestamp: new Date().toISOString(),
+            upvotes: 0,
+            comments: []
+        };
+        explanations.unshift(newExplanation);
+        await saveExplanations(explanations);
+        res.status(201).json(newExplanation);
+    } catch (error) {
+        console.error('Error saving explanation:', error);
+        res.status(500).json({ error: 'Failed to save explanation' });
+    }
+});
+
+// GET a single explanation by ID
+app.get('/api/explanations/:id', async (req, res) => {
+    try {
+        const explanations = await loadExplanations();
+        const explanation = explanations.find(e => e.id == req.params.id);
+        if (!explanation) {
+            return res.status(404).json({ error: 'Explanation not found' });
+        }
+        res.json(explanation);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load explanation' });
+    }
+});
+
+// ============================================
+// RESEARCH PAPERS (Existing Feature)
+// ============================================
+
+// Generate hash for thesis content
+function generateHash(content) {
+    return crypto.createHash('sha256').update(content).digest('hex').substring(0, 16);
+}
+
+// GET all research papers
 app.get('/api/research', async (req, res) => {
     try {
         const data = await fs.readFile(DATA_FILE, 'utf8');
-        res.json(JSON.parse(data));
-    } catch {
+        const papers = JSON.parse(data);
+        res.json(papers);
+    } catch (error) {
         res.json([]);
     }
 });
 
+// POST a new research paper
 app.post('/api/research', async (req, res) => {
     try {
-        const { title, authors, institution, abstract, fundingUrl, authorWallet, txHash, contentHash } = req.body;
+        const { title, authors, institution, abstract, fundingUrl, authorWallet } = req.body;
+        
+        if (!title || !abstract) {
+            return res.status(400).json({ error: 'Title and abstract are required' });
+        }
         
         const paperId = Date.now();
-        const aiSummary = await generateAISummary(abstract, title);
+        const contentHash = generateHash(abstract);
         
         const newPaper = {
             id: paperId,
@@ -67,10 +124,9 @@ app.post('/api/research', async (req, res) => {
             abstract,
             fundingUrl: fundingUrl || null,
             authorWallet: authorWallet || null,
-            aiSummary,
-            txHash: txHash || null,
-            contentHash: contentHash || null,
-            timestamp: new Date().toISOString()
+            contentHash: contentHash,
+            timestamp: new Date().toISOString(),
+            views: 0
         };
         
         let papers = [];
@@ -84,12 +140,50 @@ app.post('/api/research', async (req, res) => {
         
         res.status(201).json(newPaper);
     } catch (error) {
-        console.error(error);
+        console.error('Error saving research:', error);
         res.status(500).json({ error: 'Failed to save research' });
     }
 });
 
+// GET a single paper by ID
+app.get('/api/research/:id', async (req, res) => {
+    try {
+        const data = await fs.readFile(DATA_FILE, 'utf8');
+        const papers = JSON.parse(data);
+        const paper = papers.find(p => p.id == req.params.id);
+        if (!paper) {
+            return res.status(404).json({ error: 'Paper not found' });
+        }
+        res.json(paper);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load paper' });
+    }
+});
+
+// Track paper views
+app.post('/api/view/:id', async (req, res) => {
+    try {
+        const data = await fs.readFile(DATA_FILE, 'utf8');
+        const papers = JSON.parse(data);
+        const paper = papers.find(p => p.id == req.params.id);
+        if (paper) {
+            paper.views = (paper.views || 0) + 1;
+            await fs.writeFile(DATA_FILE, JSON.stringify(papers, null, 2));
+        }
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to track view' });
+    }
+});
+
+// ============================================
+// SERVER START
+// ============================================
+
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`AI summaries: ${OPENROUTER_API_KEY ? 'ENABLED' : 'DISABLED'}`);
+    console.log(`\n 39 Quantum running on port ${PORT}`);
+    console.log(` Research data: ${DATA_FILE}`);
+    console.log(` Explanations data: ${EXPLANATIONS_FILE}`);
+    console.log(` AI summaries: REMOVED (community-driven now)`);
+    console.log(`\n Read. Publish. Explain.`);
 });
