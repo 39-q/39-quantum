@@ -14,8 +14,8 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
             background: #f8f9fa;
-            color: ##1a1a1a;
-            line-height: 1.5;
+            color: #1a1a1a;
+            line-height: 1.6;
         }
 
         .container {
@@ -30,24 +30,24 @@
             align-items: center;
             margin-bottom: 3rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #e5e5e5;
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            color: #000807;
-            font-family: 'Courier New', monospace;
+            color: #1a2a3a;
+            text-decoration: none;
         }
 
         nav a {
             margin-left: 1.5rem;
             text-decoration: none;
-            color: #666;
+            color: #4a5568;
         }
 
         nav a:hover {
-            color: #00BEA5;
+            color: #1a2a3a;
         }
 
         .hero {
@@ -56,14 +56,14 @@
         }
 
         .hero h1 {
-            font-size: 48px;
+            font-size: 2.5rem;
             margin-bottom: 1rem;
             color: #1a1a1a;
         }
 
         .hero p {
-            font-size: 18px;
-            color: #666;
+            font-size: 1.125rem;
+            color: #4a5568;
             max-width: 600px;
             margin: 0 auto 2rem auto;
         }
@@ -75,34 +75,34 @@
             flex-wrap: wrap;
         }
 
-        button {
-            padding: 12px 28px;
-            font-size: 16px;
-            font-weight: 500;
-            border: none;
-            border-radius: 8px;
+        .btn-primary, .btn-outline {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            text-decoration: none;
             cursor: pointer;
-            transition: all 0.2s;
+            border: none;
+            transition: background 0.2s;
         }
 
         .btn-primary {
-            background: #040cb0;
+            background: #1a2a3a;
             color: white;
         }
 
         .btn-primary:hover {
-            background: #040cb0;
-            transform: translateY(-1px);
+            background: #2c3e50;
         }
 
         .btn-outline {
             background: transparent;
-            color: #040cb0;
-            border: 2px solid ;
+            color: #1a2a3a;
+            border: 1px solid #1a2a3a;
         }
 
         .btn-outline:hover {
-            background: #040cb0;
+            background: #1a2a3a;
             color: white;
         }
 
@@ -111,376 +111,90 @@
         }
 
         .papers h2 {
+            font-size: 1.5rem;
             margin-bottom: 1.5rem;
-            font-size: 24px;
         }
 
         .paper-card {
             background: white;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            padding: 1rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 1.5rem;
             margin-bottom: 1rem;
         }
 
         .paper-title {
             font-weight: bold;
-            font-size: 18px;
+            font-size: 1.125rem;
             margin-bottom: 0.25rem;
         }
 
         .paper-authors {
-            font-size: 14px;
-            color: #666;
+            font-size: 0.9rem;
+            color: #6b7280;
             margin-bottom: 0.5rem;
         }
 
         .paper-abstract {
-            font-size: 14px;
-            color: #444;
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+
+        .paper-link {
+            display: inline-block;
+            margin-top: 0.75rem;
+            color: #1a2a3a;
+            text-decoration: underline;
+            font-size: 0.9rem;
+        }
+
+        .paper-link:hover {
+            text-decoration: none;
         }
 
         .footer {
             text-align: center;
             margin-top: 3rem;
             padding-top: 1.5rem;
-            border-top: 1px solid #ddd;
-            color: #666;
-            font-size: 12px;
-        }
-
-        /* Form Styles */
-        .form-container {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            margin-top: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            text-align: left;
-        }
-
-        .form-container h3 {
-            margin-bottom: 1.5rem;
-            font-size: 24px;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #;
-            box-shadow: 0 0 0 2px rgba(0,190,165,0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-            margin-top: 1.5rem;
-        }
-
-        .btn-submit {
-            background: #1a2a3a;
-            color: white;
-            padding: 12px 28px;
-        }
-
-        .btn-cancel {
-            background: #e0e0e0;
-            color: #333;
-            padding: 12px 28px;
-        }
-
-        .btn-submit:hover {
-            background: #0f1a2a;
-        }
-
-        .btn-cancel:hover {
-            background: #ccc;
-        }
-
-        .loading {
-            display: inline-block;
-            margin-left: 10px;
-        }
-
-        .hidden {
-            display: none;
+            border-top: 1px solid #e5e5e5;
+            color: #6b7280;
+            font-size: 0.8rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="logo">39 Quantum</div>
+            <a href="/" class="logo">39 Quantum</a>
             <nav>
-                <a href="#">Papers</a>
+                <a href="/">Explore</a>
+                <a href="/explanations.html">Explanations</a>
+                <a href="/add-explanation.html">Write Explanation</a>
             </nav>
         </header>
 
         <div class="hero">
-            <h1>Read. Publish. Explain.</h1>
-            <p>The future of quantum research on Base. Read ,Discuss and Publish about a revolutionary field.</p>
-            <div class="btn-group"> 
-                <button class="btn-outline" id="showFormBtn">Submit Thesis</button>
-                <button class="btn-outline" id="viewBtn">View Papers</button>
+            <h1>Research. Explain. Fund.</h1>
+            <p>The future of quantum research on Base. Read, discuss, and publish about a revolutionary field.</p>
+            <div class="btn-group">
+                <a href="/explanations.html" class="btn-primary">Explore Explanations</a>
+                <a href="/add-explanation.html" class="btn-outline">Write Explanation</a>
             </div>
-        </div>
-
-        <!-- Thesis Submission Form (hidden by default) -->
-        <div id="thesisFormContainer" class="form-container hidden">
-            <h3>Submit Your Quantum Research</h3>
-            <form id="thesisForm">
-                <div class="form-group">
-                    <label for="formTitle">Thesis Title *</label>
-                    <input type="text" id="formTitle" name="title" placeholder="e.g., A Novel Approach to Quantum Error Correction" required>
-                </div>
-                <div class="form-group">
-                    <label for="formAuthors">Authors *</label>
-                    <input type="text" id="formAuthors" name="authors" placeholder="e.g., Dr. Jane Smith, Prof. Quantum Lee" required>
-                </div>
-                <div class="form-group">
-                    <label for="formInstitution">Institution (Optional)</label>
-                    <input type="text" id="formInstitution" name="institution" placeholder="e.g., MIT Quantum Research Lab">
-                </div>
-                <div class="form-group">
-                    <label for="formAbstract">Abstract *</label>
-                    <textarea id="formAbstract" name="abstract" placeholder="Paste your thesis abstract here..." required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="formFundingUrl">Funding URL (Optional)</label>
-                    <input type="url" id="formFundingUrl" name="fundingUrl" placeholder="https://gitcoin.co/grants/... or your funding page">
-                </div>
-                <div class="form-actions">
-                    <button type="button" id="cancelFormBtn" class="btn-cancel">Cancel</button>
-                    <button type="submit" id="submitFormBtn" class="btn-submit">Publish & Timestamp</button>
-                </div>
-            </form>
         </div>
 
         <div class="papers">
             <h2>Recent Papers</h2>
             <div id="papersList">Loading papers...</div>
         </div>
-        
+
         <div class="footer">
-            <p>© 2026 39 Quantum · Built on Base</p>
-            <p style="margin-top: 10px;">
-                <a href="https://github.com/39-q" target="_blank" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">GitHub</a>
-                <a href="#" style="color: #00BEA5; text-decoration: none; margin: 0 10px;">Twitter</a>
-            </p>
+            <p>© 2026 39 Quantum · Read. Publish. Explain.</p>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.0/dist/ethers.umd.min.js"></script>
     <script>
-        let userAddress = null;
-        let provider = null;
-        let signer = null;
-        const API_URL = window.location.origin + '/api/research';
+        const API_URL = '/api/research';
 
-        // Connect MetaMask/OKX Wallet
-        async function connectWallet() {
-            if (typeof window.ethereum === 'undefined') {
-                alert('Please install MetaMask or OKX Wallet first');
-                window.open('https://metamask.io/download/', '_blank');
-                return;
-            }
-            
-            try {
-                provider = new ethers.BrowserProvider(window.ethereum);
-                const accounts = await provider.send("eth_requestAccounts", []);
-                userAddress = accounts[0];
-                signer = await provider.getSigner();
-                
-                // Switch to Base network
-                await switchToBaseNetwork();
-                
-                const connectBtn = document.getElementById('connectBtn');
-                connectBtn.textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
-                connectBtn.disabled = true;
-                alert('Wallet connected to Base!');
-            } catch (error) {
-                alert('Connection failed: ' + error.message);
-            }
-        }
-
-        async function switchToBaseNetwork() {
-            try {
-                await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: '0x2105' }] // Base Mainnet
-                });
-            } catch (error) {
-                if (error.code === 4902) {
-                    await window.ethereum.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [{
-                            chainName: 'Base',
-                            chainId: '0x2105',
-                            nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-                            rpcUrls: ['https://mainnet.base.org'],
-                            blockExplorerUrls: ['https://basescan.org']
-                        }]
-                    });
-                }
-            }
-        }
-
-        // Create timestamp transaction on Base
-        async function createBaseTimestamp(paperId, contentHash) {
-            if (!signer) {
-                alert('Please connect wallet first');
-                return null;
-            }
-            
-            try {
-                const metadata = JSON.stringify({
-                    type: 'THESIS_TIMESTAMP',
-                    paperId: paperId,
-                    hash: contentHash,
-                    platform: '39 Quantum',
-                    timestamp: Date.now()
-                });
-                
-                const tx = await signer.sendTransaction({
-                    to: userAddress,
-                    value: 0,
-                    data: ethers.toUtf8Bytes(metadata)
-                });
-                
-                await tx.wait();
-                return tx.hash;
-            } catch (error) {
-                console.error('Timestamp error:', error);
-                alert('Failed to create timestamp: ' + error.message);
-                return null;
-            }
-        }
-
-        // Generate content hash
-        async function generateHash(text) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(text);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
-        }
-
-        // Show form
-        document.getElementById('showFormBtn').onclick = () => {
-            if (!userAddress) {
-                alert('Please connect your wallet first');
-                return;
-            }
-            document.getElementById('thesisFormContainer').classList.remove('hidden');
-        };
-
-        // Cancel form
-        document.getElementById('cancelFormBtn').onclick = () => {
-            document.getElementById('thesisFormContainer').classList.add('hidden');
-            document.getElementById('thesisForm').reset();
-        };
-
-        // Submit form
-        document.getElementById('thesisForm').onsubmit = async (e) => {
-            e.preventDefault();
-            
-            const title = document.getElementById('formTitle').value;
-            const authors = document.getElementById('formAuthors').value;
-            const institution = document.getElementById('formInstitution').value;
-            const abstract = document.getElementById('formAbstract').value;
-            const fundingUrl = document.getElementById('formFundingUrl').value;
-            
-            if (!title || !authors || !abstract) {
-                alert('Please fill in all required fields');
-                return;
-            }
-            
-            // Hide form
-            document.getElementById('thesisFormContainer').classList.add('hidden');
-            
-            // Show loading state
-            const submitBtn = document.getElementById('submitFormBtn');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Preparing...';
-            submitBtn.disabled = true;
-            
-            try {
-                const contentHash = await generateHash(abstract);
-                
-                if (!confirm('This will open your wallet to approve a transaction. You will pay a small gas fee in ETH. Continue?')) {
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                    document.getElementById('thesisForm').reset();
-                    return;
-                }
-                
-                submitBtn.textContent = 'Creating timestamp...';
-                
-                const txHash = await createBaseTimestamp(Date.now(), contentHash);
-                
-                if (!txHash) {
-                    throw new Error('Transaction was not completed');
-                }
-                
-                submitBtn.textContent = 'Submitting...';
-                
-                const newPaper = { 
-                    title, authors, institution, abstract, fundingUrl, 
-                    authorWallet: userAddress, 
-                    txHash: txHash,
-                    contentHash: contentHash
-                };
-                
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newPaper)
-                });
-                
-                if (response.ok) {
-                    alert('✅ Thesis submitted and timestamped!\nTransaction: ' + txHash.slice(0,10) + '...');
-                    document.getElementById('thesisForm').reset();
-                    loadPapers();
-                } else {
-                    alert('❌ Submission failed');
-                }
-            } catch (error) {
-                alert('Error: ' + error.message);
-            } finally {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }
-        };
-
-        // Load papers
         async function loadPapers() {
             const papersDiv = document.getElementById('papersList');
             papersDiv.innerHTML = 'Loading...';
@@ -496,11 +210,11 @@
                         <div class="paper-title">${escapeHtml(paper.title)}</div>
                         <div class="paper-authors">${paper.authors || 'Anonymous'} ${paper.institution ? `· ${paper.institution}` : ''}</div>
                         <div class="paper-abstract">${escapeHtml(paper.abstract?.substring(0, 200) || '')}...</div>
-                        ${paper.txHash ? `<div><a href="https://basescan.org/tx/${paper.txHash}" target="_blank" style="font-size:12px; color:#00BEA5;">🔗 View on BaseScan</a></div>` : ''}
+                        <a href="/explanations.html" class="paper-link">Read community explanations →</a>
                     </div>
                 `).join('');
             } catch (error) {
-                papersDiv.innerHTML = '<div class="paper-card">Error loading papers. Backend may be starting up.</div>';
+                papersDiv.innerHTML = '<div class="paper-card">Error loading papers.</div>';
             }
         }
 
@@ -514,9 +228,6 @@
             });
         }
 
-        document.getElementById('connectBtn').onclick = connectWallet;
-        document.getElementById('viewBtn').onclick = loadPapers;
-        
         loadPapers();
     </script>
 </body>
