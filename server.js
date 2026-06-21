@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto');
 const path = require('path');
-const { yolodb } = require('yolodb');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,39 +11,50 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
-// Initialize YoloDB tables
-const explanations = yolodb('explanations.json', 'id', []);
-const research = yolodb('research.json', 'id', []);
+const EXPLANATIONS_FILE = path.join(__dirname, 'explanations.json');
+const RESEARCH_FILE = path.join(__dirname, 'research.json');
+
+// Helper: Read JSON file
+function readJSON(file) {
+    try {
+        if (!fs.existsSync(file)) return [];
+        const data = fs.readFileSync(file, 'utf8');
+        return JSON.parse(data);
+    } catch {
+        return [];
+    }
+}
+
+// Helper: Write JSON file
+function writeJSON(file, data) {
+    fs.writeFileSync(file, JSON.stringify(data, null, 2));
+}
 
 // ========== EXPLANATIONS ==========
 
-// GET all explanations
 app.get('/api/explanations', (req, res) => {
     try {
-        const data = explanations.find({});
+        const data = readJSON(EXPLANATIONS_FILE);
         res.json(data);
     } catch (error) {
-        console.error('Error loading explanations:', error);
         res.status(500).json({ error: 'Failed to load explanations' });
     }
 });
 
-// GET a single explanation by ID
 app.get('/api/explanations/:id', (req, res) => {
     try {
+        const data = readJSON(EXPLANATIONS_FILE);
         const id = Number(req.params.id);
-        const explanation = explanations.findById(id);
-        if (!explanation) {
+        const item = data.find(e => e.id === id);
+        if (!item) {
             return res.status(404).json({ error: 'Explanation not found' });
         }
-        res.json(explanation);
+        res.json(item);
     } catch (error) {
-        console.error('Error loading explanation:', error);
         res.status(500).json({ error: 'Failed to load explanation' });
     }
 });
 
-// POST a new explanation
 app.post('/api/explanations', (req, res) => {
     try {
         const { title, arxiv_id, paper_id, content, author } = req.body;
@@ -51,7 +62,8 @@ app.post('/api/explanations', (req, res) => {
             return res.status(400).json({ error: 'Title and content are required' });
         }
 
-        const newExplanation = {
+        const data = readJSON(EXPLANATIONS_FILE);
+        const newItem = {
             id: Date.now(),
             title,
             arxiv_id: arxiv_id || null,
@@ -62,28 +74,25 @@ app.post('/api/explanations', (req, res) => {
             upvotes: 0,
             comments: []
         };
-        explanations.insert(newExplanation);
-        res.status(201).json(newExplanation);
+        data.unshift(newItem);
+        writeJSON(EXPLANATIONS_FILE, data);
+        res.status(201).json(newItem);
     } catch (error) {
-        console.error('Error saving explanation:', error);
         res.status(500).json({ error: 'Failed to save explanation' });
     }
 });
 
-// ========== RESEARCH PAPERS ==========
+// ========== RESEARCH ==========
 
-// GET all papers
 app.get('/api/research', (req, res) => {
     try {
-        const data = research.find({});
+        const data = readJSON(RESEARCH_FILE);
         res.json(data);
     } catch (error) {
-        console.error('Error loading research:', error);
         res.status(500).json({ error: 'Failed to load research' });
     }
 });
 
-// POST a new paper
 app.post('/api/research', (req, res) => {
     try {
         const { title, authors, institution, abstract, fundingUrl, authorWallet } = req.body;
@@ -91,7 +100,8 @@ app.post('/api/research', (req, res) => {
             return res.status(400).json({ error: 'Title and abstract are required' });
         }
 
-        const newPaper = {
+        const data = readJSON(RESEARCH_FILE);
+        const newItem = {
             id: Date.now(),
             title,
             authors: authors || 'Anonymous',
@@ -103,26 +113,11 @@ app.post('/api/research', (req, res) => {
             timestamp: new Date().toISOString(),
             views: 0
         };
-        research.insert(newPaper);
-        res.status(201).json(newPaper);
+        data.unshift(newItem);
+        writeJSON(RESEARCH_FILE, data);
+        res.status(201).json(newItem);
     } catch (error) {
-        console.error('Error saving research:', error);
         res.status(500).json({ error: 'Failed to save research' });
-    }
-});
-
-// GET a single paper by ID
-app.get('/api/research/:id', (req, res) => {
-    try {
-        const id = Number(req.params.id);
-        const paper = research.findById(id);
-        if (!paper) {
-            return res.status(404).json({ error: 'Paper not found' });
-        }
-        res.json(paper);
-    } catch (error) {
-        console.error('Error loading paper:', error);
-        res.status(500).json({ error: 'Failed to load paper' });
     }
 });
 
@@ -144,9 +139,8 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// ========== START SERVER ==========
+// ========== START ==========
 
 app.listen(PORT, () => {
-    console.log(` 39 Quantum running on port ${PORT}`);
-    console.log(` Data stored with YoloDB`);
+    console.log(` Server running on port ${PORT}`);
 });
