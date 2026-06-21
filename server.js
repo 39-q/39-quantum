@@ -11,10 +11,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
-const DATA_FILE = path.join(__dirname, 'research-log.json');
+const RESEARCH_FILE = path.join(__dirname, 'research.json');
 const EXPLANATIONS_FILE = path.join(__dirname, 'explanations.json');
 
-// Helper functions for explanations
+// Helper to read explanations
 async function loadExplanations() {
     try {
         const data = await fs.readFile(EXPLANATIONS_FILE, 'utf8');
@@ -24,33 +24,63 @@ async function loadExplanations() {
     }
 }
 
+// Helper to save explanations
 async function saveExplanations(explanations) {
     await fs.writeFile(EXPLANATIONS_FILE, JSON.stringify(explanations, null, 2));
 }
 
+// Helper to read research papers
+async function loadResearch() {
+    try {
+        const data = await fs.readFile(RESEARCH_FILE, 'utf8');
+        return JSON.parse(data);
+    } catch {
+        return [];
+    }
+}
+
+// Helper to save research papers
+async function saveResearch(papers) {
+    await fs.writeFile(RESEARCH_FILE, JSON.stringify(papers, null, 2));
+}
+
+// ========== EXPLANATIONS API ==========
+
 // GET all explanations
 app.get('/api/explanations', async (req, res) => {
+    const explanations = await loadExplanations();
+    res.json(explanations);
+});
+
+// GET a single explanation by ID
+app.get('/api/explanations/:id', async (req, res) => {
     try {
         const explanations = await loadExplanations();
-        res.json(explanations);
+        const id = Number(req.params.id);
+        const explanation = explanations.find(e => e.id === id);
+        if (!explanation) {
+            return res.status(404).json({ error: 'Explanation not found' });
+        }
+        res.json(explanation);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to load explanations' });
+        res.status(500).json({ error: 'Failed to load explanation' });
     }
 });
 
 // POST a new explanation
 app.post('/api/explanations', async (req, res) => {
     try {
-        const { title, arxiv_id, content, author } = req.body;
-        if (!arxiv_id || !title || !content) {
-            return res.status(400).json({ error: 'Missing required fields' });
+        const { title, arxiv_id, paper_id, content, author } = req.body;
+        if (!title || !content) {
+            return res.status(400).json({ error: 'Title and content are required' });
         }
-        
+
         const explanations = await loadExplanations();
         const newExplanation = {
             id: Date.now(),
             title,
-            arxiv_id,
+            arxiv_id: arxiv_id || null,
+            paper_id: paper_id || null,
             content,
             author: author || 'Anonymous',
             timestamp: new Date().toISOString(),
@@ -66,109 +96,43 @@ app.post('/api/explanations', async (req, res) => {
     }
 });
 
-// GET a single explanation by ID
-app.get('/api/explanations/:id', async (req, res) => {
-    try {
-        const explanations = await loadExplanations();
-        const explanation = explanations.find(e => e.id == req.params.id);
-        if (!explanation) {
-            return res.status(404).json({ error: 'Explanation not found' });
-        }
-        res.json(explanation);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to load explanation' });
-    }
-});
+// ========== RESEARCH API ==========
 
-// Generate hash for thesis content
-function generateHash(content) {
-    return crypto.createHash('sha256').update(content).digest('hex').substring(0, 16);
-}
-
-// GET all research papers
 app.get('/api/research', async (req, res) => {
-    try {
-        const data = await fs.readFile(DATA_FILE, 'utf8');
-        const papers = JSON.parse(data);
-        res.json(papers);
-    } catch (error) {
-        res.json([]);
-    }
+    const papers = await loadResearch();
+    res.json(papers);
 });
 
-// POST a new research paper
 app.post('/api/research', async (req, res) => {
     try {
         const { title, authors, institution, abstract, fundingUrl, authorWallet } = req.body;
-        
         if (!title || !abstract) {
             return res.status(400).json({ error: 'Title and abstract are required' });
         }
-        
-        const paperId = Date.now();
-        const contentHash = generateHash(abstract);
-        
+
+        const papers = await loadResearch();
         const newPaper = {
-            id: paperId,
+            id: Date.now(),
             title,
             authors: authors || 'Anonymous',
             institution: institution || '',
             abstract,
             fundingUrl: fundingUrl || null,
             authorWallet: authorWallet || null,
-            contentHash: contentHash,
+            contentHash: crypto.createHash('sha256').update(abstract).digest('hex').substring(0, 16),
             timestamp: new Date().toISOString(),
             views: 0
         };
-        
-        let papers = [];
-        try {
-            const data = await fs.readFile(DATA_FILE, 'utf8');
-            papers = JSON.parse(data);
-        } catch {}
-        
         papers.unshift(newPaper);
-        await fs.writeFile(DATA_FILE, JSON.stringify(papers, null, 2));
-        
+        await saveResearch(papers);
         res.status(201).json(newPaper);
     } catch (error) {
-        console.error('Error saving research:', error);
         res.status(500).json({ error: 'Failed to save research' });
     }
 });
 
-// GET a single paper by ID
-app.get('/api/research/:id', async (req, res) => {
-    try {
-        const data = await fs.readFile(DATA_FILE, 'utf8');
-        const papers = JSON.parse(data);
-        const paper = papers.find(p => p.id == req.params.id);
-        if (!paper) {
-            return res.status(404).json({ error: 'Paper not found' });
-        }
-        res.json(paper);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to load paper' });
-    }
-});
+// ========== STATIC PAGES ==========
 
-// Track paper views
-app.post('/api/view/:id', async (req, res) => {
-    try {
-        const data = await fs.readFile(DATA_FILE, 'utf8');
-        const papers = JSON.parse(data);
-        const paper = papers.find(p => p.id == req.params.id);
-        if (paper) {
-            paper.views = (paper.views || 0) + 1;
-            await fs.writeFile(DATA_FILE, JSON.stringify(papers, null, 2));
-        }
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to track view' });
-    }
-});
-
-// Serve static HTML pages
 app.get('/explanations.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'explanations.html'));
 });
@@ -177,15 +141,16 @@ app.get('/add-explanation.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'add-explanation.html'));
 });
 
-// Serve individual explanation page
 app.get('/explanation/:id', (req, res) => {
-    res.sendFile(__dirname + '/explanation.html');
+    res.sendFile(path.join(__dirname, 'explanation.html'));
 });
 
-// Start server
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// ========== START SERVER ==========
+
 app.listen(PORT, () => {
-    console.log(`\n 39 Quantum running on port ${PORT}`);
-    console.log(` Research data: ${DATA_FILE}`);
-    console.log(` Explanations data: ${EXPLANATIONS_FILE}`);
-    console.log(` Read. Publish. Explain.`);
+    console.log(`✅ 39 Quantum running on port ${PORT}`);
 });
