@@ -149,6 +149,9 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+app.get('/explanation/:id', (req, res) => {
+    res.sendFile(__dirname + '/explanation.html');
+});
 // ========== START SERVER ==========
 
 app.listen(PORT, () => {
