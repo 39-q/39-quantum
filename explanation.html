@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Explanation - 39 Quantum</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #f8f9fa; color: #1a1a1a; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e5e5; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #1a2a3a; text-decoration: none; font-family: 'Courier New', Courier, monospace; }
+        nav a { margin-left: 1.5rem; text-decoration: none; color: #4a5568; }
+        nav a:hover { color: #1a2a3a; }
+        .meta { color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem; }
+        .content { white-space: pre-wrap; margin: 1.5rem 0; }
+        .btn { display: inline-block; background: #1a2a3a; color: white; padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; }
+        .btn:hover { background: #2c3e50; }
+        .footer { text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #e5e5e5; color: #6b7280; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="logo">39 Quantum</a>
+            <nav>
+                <a href="/">Explore</a>
+                <a href="/explanations.html">Explanations</a>
+                <a href="/add-explanation.html">Write Explanation</a>
+            </nav>
+        </header>
+
+        <div id="explanationContent">
+            <h1 id="title">Loading...</h1>
+            <div class="meta" id="meta">Loading...</div>
+            <div class="content" id="content">Loading...</div>
+            <a href="/explanations.html" class="btn">← Back to Explanations</a>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 39 Quantum · Read. Publish. Explain.</p>
+        </div>
+    </div>
+
+    <script>
+        const path = window.location.pathname;
+        const id = path.split('/').pop();
+
+        async function loadExplanation() {
+            try {
+                const response = await fetch(`/api/explanations/${id}`);
+                if (!response.ok) {
+                    throw new Error('Explanation not found');
+                }
+                const data = await response.json();
+                document.getElementById('title').textContent = data.title;
+                document.getElementById('meta').innerHTML = `
+                    By: ${data.author} · ${new Date(data.timestamp).toLocaleDateString()}
+                    ${data.arxiv_id ? ` · <a href="https://arxiv.org/abs/${data.arxiv_id}" target="_blank">View on arXiv</a>` : ''}
+                    ${data.paper_id ? ` · <a href="/paper/${data.paper_id}">View Original Paper</a>` : ''}
+                `;
+                document.getElementById('content').textContent = data.content;
+            } catch (error) {
+                document.getElementById('explanationContent').innerHTML = `
+                    <h1>Explanation Not Found</h1>
+                    <p>The explanation you're looking for doesn't exist.</p>
+                    <a href="/explanations.html" class="btn">← Back to Explanations</a>
+                `;
+            }
+        }
+
+        loadExplanation();
+    </script>
+</body>
+</html>
