@@ -194,3 +194,110 @@ app.listen(PORT, () => {
     console.log(`✅ 39 Quantum running on port ${PORT}`);
     console.log(`📁 Database: Supabase`);
 });
+
+// ========== FORUM API ==========
+
+// GET all topics
+app.get('/api/topics', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('topics')
+            .select('*')
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load topics' });
+    }
+});
+
+// GET a single topic with replies
+app.get('/api/topics/:id', async (req, res) => {
+    try {
+        const id = Number(req.params.id);
+        const { data: topic, error: topicError } = await supabase
+            .from('topics')
+            .select('*')
+            .eq('id', id)
+            .single();
+        if (topicError) throw topicError;
+
+        const { data: replies, error: repliesError } = await supabase
+            .from('replies')
+            .select('*')
+            .eq('topic_id', id)
+            .order('created_at', { ascending: true });
+        if (repliesError) throw repliesError;
+
+        res.json({ topic, replies });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load topic' });
+    }
+});
+
+// POST a new topic
+app.post('/api/topics', async (req, res) => {
+    try {
+        const { title, content, author_name, category, paper_id } = req.body;
+        if (!title || !content) {
+            return res.status(400).json({ error: 'Title and content are required' });
+        }
+
+        const newTopic = {
+            id: Date.now(),
+            title,
+            content,
+            author_name: author_name || 'Anonymous',
+            category: category || 'general',
+            paper_id: paper_id || null,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        };
+
+        const { data, error } = await supabase.from('topics').insert([newTopic]).select();
+        if (error) throw error;
+        res.status(201).json(data[0]);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to create topic' });
+    }
+});
+
+// POST a reply to a topic
+app.post('/api/replies', async (req, res) => {
+    try {
+        const { topic_id, content, author_name, parent_id } = req.body;
+        if (!topic_id || !content) {
+            return res.status(400).json({ error: 'Topic ID and content are required' });
+        }
+
+        const newReply = {
+            id: Date.now(),
+            topic_id: Number(topic_id),
+            content,
+            author_name: author_name || 'Anonymous',
+            parent_id: parent_id || null,
+            created_at: new Date().toISOString()
+        };
+
+        const { data, error } = await supabase.from('replies').insert([newReply]).select();
+        if (error) throw error;
+
+        // Update reply count on topic
+        const { data: topicData } = await supabase
+            .from('topics')
+            .select('reply_count')
+            .eq('id', topic_id)
+            .single();
+
+        const newCount = (topicData?.reply_count || 0) + 1;
+        await supabase
+            .from('topics')
+            .update({ reply_count: newCount })
+            .eq('id', topic_id);
+
+        res.status(201).json(data[0]);
+    } catch (error) {
+        console.error('Error creating reply:', error);
+        res.status(500).json({ error: 'Failed to create reply' });
+    }
+});
