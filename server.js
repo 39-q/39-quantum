@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
-// ========== SUPABASE SETUP ==========
+// Supabase setup
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -170,32 +170,7 @@ app.post('/api/view/:id', async (req, res) => {
     }
 });
 
-// ========== STATIC PAGES ==========
-
-app.get('/explanations.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'explanations.html'));
-});
-
-app.get('/add-explanation.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'add-explanation.html'));
-});
-
-app.get('/explanation/:id', (req, res) => {
-    res.sendFile(path.join(__dirname, 'explanation.html'));
-});
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// ========== START ==========
-
-app.listen(PORT, () => {
-    console.log(`✅ 39 Quantum running on port ${PORT}`);
-    console.log(`📁 Database: Supabase`);
-});
-
-// ========== FORUM API ==========
+// ========== FORUM ==========
 
 // GET all topics
 app.get('/api/topics', async (req, res) => {
@@ -207,6 +182,7 @@ app.get('/api/topics', async (req, res) => {
         if (error) throw error;
         res.json(data);
     } catch (error) {
+        console.error('Error loading topics:', error);
         res.status(500).json({ error: 'Failed to load topics' });
     }
 });
@@ -231,34 +207,54 @@ app.get('/api/topics/:id', async (req, res) => {
 
         res.json({ topic, replies });
     } catch (error) {
+        console.error('Error loading topic:', error);
         res.status(500).json({ error: 'Failed to load topic' });
     }
 });
 
 // POST a new topic
 app.post('/api/topics', async (req, res) => {
+    console.log('===== POST /api/topics =====');
+    console.log('Request body:', req.body);
+    
     try {
         const { title, content, author_name, category, paper_id } = req.body;
+        
         if (!title || !content) {
+            console.log('Missing title or content');
             return res.status(400).json({ error: 'Title and content are required' });
         }
 
         const newTopic = {
             id: Date.now(),
-            title,
-            content,
+            title: title,
+            content: content,
             author_name: author_name || 'Anonymous',
             category: category || 'general',
             paper_id: paper_id || null,
             created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
+            reply_count: 0,
+            upvotes: 0
         };
 
-        const { data, error } = await supabase.from('topics').insert([newTopic]).select();
-        if (error) throw error;
+        console.log('Attempting to insert:', newTopic);
+
+        const { data, error } = await supabase
+            .from('topics')
+            .insert([newTopic])
+            .select();
+
+        if (error) {
+            console.error('Supabase error:', error);
+            return res.status(500).json({ error: 'Supabase error: ' + error.message });
+        }
+
+        console.log('Insert successful:', data);
         res.status(201).json(data[0]);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to create topic' });
+        console.error('Catch block error:', error);
+        res.status(500).json({ error: 'Server error: ' + error.message });
     }
 });
 
@@ -279,7 +275,10 @@ app.post('/api/replies', async (req, res) => {
             created_at: new Date().toISOString()
         };
 
-        const { data, error } = await supabase.from('replies').insert([newReply]).select();
+        const { data, error } = await supabase
+            .from('replies')
+            .insert([newReply])
+            .select();
         if (error) throw error;
 
         // Update reply count on topic
@@ -300,4 +299,42 @@ app.post('/api/replies', async (req, res) => {
         console.error('Error creating reply:', error);
         res.status(500).json({ error: 'Failed to create reply' });
     }
+});
+
+// ========== STATIC PAGES ==========
+
+app.get('/explanations.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'explanations.html'));
+});
+
+app.get('/add-explanation.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'add-explanation.html'));
+});
+
+app.get('/explanation/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, 'explanation.html'));
+});
+
+app.get('/forum.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'forum.html'));
+});
+
+app.get('/new-topic.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'new-topic.html'));
+});
+
+app.get('/topic/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, 'topic.html'));
+});
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// ========== START ==========
+
+app.listen(PORT, () => {
+    console.log(` 39 Quantum running on port ${PORT}`);
+    console.log(` Database: Supabase`);
+    console.log(` Read. Publish. Explain.`);
 });
