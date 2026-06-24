@@ -160,7 +160,25 @@
             color: #6b7280;
             font-size: 0.8rem;
         }
-    </style>
+
+        .btn-wallet {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+            background: #092ee6;
+            color: white;
+        }
+
+        .btn-wallet:hover {
+            background:#f7f8fc;
+        }
+            
+        </style>
 </head>
 <body>
     <div class="container">
@@ -170,6 +188,7 @@
                 <a href="/">Explore</a>
                 <a href="/explanations.html">Explanations</a>
                 <a href="/add-explanation.html">Write Explanation</a>
+                <button id="connectWalletBtn" class="btn-wallet">Connect Wallet</button>
             </nav>
         </header>
 
@@ -234,6 +253,43 @@
         }
 
         loadPapers();
+    </script>
+    <div id="walletStatus"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
+<script>
+let userAddress = null;
+let signer = null;
+
+async function connectWallet() {
+    if (typeof window.ethereum === 'undefined') {
+        alert('Please install MetaMask or Coinbase Wallet.');
+        window.open('https://metamask.io/download/', '_blank');
+        return;
+    }
+
+    try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = await provider.getSigner();
+        userAddress = await signer.getAddress();
+        
+        // Switch to Base network
+        await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x2105' }] // Base Mainnet
+        });
+
+        document.getElementById('connectWalletBtn').textContent = `Connected: ${userAddress.slice(0,6)}...`;
+        document.getElementById('connectWalletBtn').disabled = true;
+        document.getElementById('walletStatus').innerHTML = `✅ Connected to Base as ${userAddress}`;
+        window.userAddress = userAddress;
+        window.signer = signer;
+    } catch (error) {
+        alert('Connection failed: ' + error.message);
+    }
+}
+document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
     </script>
 </body>
 </html>
