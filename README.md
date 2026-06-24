@@ -53,4 +53,4 @@ Working, but still rough.
 
 ## License
 
-MIT
+Apache 2.0
