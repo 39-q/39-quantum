@@ -333,11 +333,43 @@ app.get('/', (req, res) => {
 
 // ======= WALLET =========
 
+// server.js
 const { SiweMessage } = require('siwe');
 const crypto = require('crypto');
 
-// Store nonces temporarily (use database in production)
+// Store nonces temporarily (use Redis or database in production)
 const nonces = new Map();
+
+app.get('/api/nonce', (req, res) => {
+    const nonce = crypto.randomBytes(16).toString('hex');
+    nonces.set(nonce, Date.now());
+    res.json({ nonce });
+});
+
+app.post('/api/auth', async (req, res) => {
+    const { message, signature } = req.body;
+    
+    try {
+        const siweMessage = new SiweMessage(message);
+        const fields = await siweMessage.verify({ signature });
+        
+        // Check nonce
+        if (!nonces.has(fields.nonce)) {
+            return res.status(401).json({ error: 'Invalid nonce' });
+        }
+        nonces.delete(fields.nonce);
+        
+        // User is authenticated!
+        // Store session, update database, etc.
+        res.json({ 
+            success: true, 
+            address: fields.address,
+            chainId: fields.chainId
+        });
+    } catch (error) {
+        res.status(401).json({ error: 'Invalid signature' });
+    }
+});
 
 // ========== AUTH ENDPOINTS ==========
 
