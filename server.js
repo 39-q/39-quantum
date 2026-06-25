@@ -73,10 +73,8 @@ app.post('/api/explanations', async (req, res) => {
             return res.status(400).json({ error: 'Title and content are required' });
         }
 
-        // Use wallet address as author, or fallback to Anonymous
         const authorAddress = author || 'anonymous';
 
-        // Rate limiting by wallet address
         if (authorAddress !== 'anonymous' && !checkRateLimit(authorAddress)) {
             return res.status(429).json({ error: 'Too many posts. Please wait 30 seconds.' });
         }
@@ -185,7 +183,6 @@ app.get('/api/research/:id', async (req, res) => {
 app.post('/api/view/:id', async (req, res) => {
     try {
         const id = Number(req.params.id);
-        // Simple increment - get current, add 1
         const { data: current } = await supabase
             .from('research')
             .select('views')
@@ -321,7 +318,6 @@ app.post('/api/replies', async (req, res) => {
             .select();
         if (error) throw error;
 
-        // Update reply count on topic
         const { data: topicData } = await supabase
             .from('topics')
             .select('reply_count')
@@ -343,6 +339,7 @@ app.post('/api/replies', async (req, res) => {
 
 // ========== STATIC PAGES ==========
 
+// Main pages
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -367,8 +364,19 @@ app.get('/new-topic.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'new-topic.html'));
 });
 
+// Topic routes - BOTH work
+app.get('/topic/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, 'topic.html'));
+});
+
 app.get('/topic.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'topic.html'));
+});
+
+// Catch-all for any other .html files
+app.get('/*.html', (req, res) => {
+    const fileName = req.path.substring(1);
+    res.sendFile(path.join(__dirname, fileName));
 });
 
 // ========== START ==========
