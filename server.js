@@ -58,7 +58,7 @@ app.get('/api/explanations/:id', async (req, res) => {
 });
 
 // POST a new explanation
-app.post('/api/explanations', async (req, res) => {
+app.post('/api/explanations', requireAuth, async (req, res) => {
     try {
         const { title, arxiv_id, paper_id, content, author } = req.body;
         if (!title || !content) {
