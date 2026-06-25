@@ -175,11 +175,11 @@
         }
 
         .btn-wallet:hover {
-            background:#f7f8fc;
+            background: #f7f8fc;
             color: #092ee6; 
         }
             
-        </style>
+    </style>
 </head>
 <body>
     <div class="container">
@@ -217,7 +217,96 @@
         </div>
     </div>
 
+    <div id="walletStatus"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/siwe@2/dist/siwe.umd.min.js"></script>
     <script>
+        // ========== WALLET CONNECTION ==========
+
+        let userAddress = null;
+        let signer = null;
+
+        async function connectWallet() {
+            if (typeof window.ethereum === 'undefined') {
+                alert('Please install MetaMask or Coinbase Wallet.');
+                window.open('https://metamask.io/download/', '_blank');
+                return;
+            }
+
+            try {
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                await provider.send("eth_requestAccounts", []);
+                signer = await provider.getSigner();
+                userAddress = await signer.getAddress();
+                
+                // Switch to Base network
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: '0x2105' }] // Base Mainnet
+                });
+
+                document.getElementById('connectWalletBtn').textContent = `✅ ${userAddress.slice(0,6)}...`;
+                document.getElementById('connectWalletBtn').disabled = true;
+                document.getElementById('walletStatus').innerHTML = `✅ Connected to Base as ${userAddress}`;
+                window.userAddress = userAddress;
+                window.signer = signer;
+            } catch (error) {
+                alert('Connection failed: ' + error.message);
+            }
+        }
+
+        document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
+
+        // ========== SIGN IN WITH ETHEREUM ==========
+
+        async function signInWithEthereum() {
+            if (!window.signer) {
+                alert('Connect wallet first.');
+                return;
+            }
+
+            try {
+                const nonceResponse = await fetch('/api/nonce');
+                const { nonce } = await nonceResponse.json();
+
+                const message = new SiweMessage({
+                    domain: window.location.host,
+                    address: window.userAddress,
+                    statement: 'Sign in to 39 Quantum to publish research.',
+                    uri: window.location.origin,
+                    version: '1',
+                    chainId: 8453,
+                    nonce: nonce
+                });
+
+                const signature = await window.signer.signMessage(message.prepareMessage());
+                
+                const authResponse = await fetch('/api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        signature: signature
+                    })
+                });
+
+                if (authResponse.ok) {
+                    alert('✅ Signed in successfully!');
+                    window.isAuthenticated = true;
+                    localStorage.setItem('session', 'authenticated');
+                    location.reload();
+                } else {
+                    alert('❌ Authentication failed.');
+                }
+            } catch (error) {
+                console.error('Auth error:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // ========== LOAD PAPERS ==========
+
         const API_URL = '/api/research';
 
         async function loadPapers() {
@@ -253,104 +342,28 @@
             });
         }
 
-        loadPapers();
-    </script>
-    <div id="walletStatus"></div>
+        // ========== CHECK AUTH ==========
 
-<script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
-<script>
-let userAddress = null;
-let signer = null;
-
-async function connectWallet() {
-    if (typeof window.ethereum === 'undefined') {
-        alert('Please install MetaMask or Coinbase Wallet.');
-        window.open('https://metamask.io/download/', '_blank');
-        return;
-    }
-
-    try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
-        signer = await provider.getSigner();
-        userAddress = await signer.getAddress();
-        
-        // Switch to Base network
-        await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x2105' }] // Base Mainnet
-        });
-
-        document.getElementById('connectWalletBtn').textContent = `Connected: ${userAddress.slice(0,6)}...`;
-        document.getElementById('connectWalletBtn').disabled = true;
-        document.getElementById('walletStatus').innerHTML = ` Connected to Base as ${userAddress}`;
-        window.userAddress = userAddress;
-        window.signer = signer;
-    } catch (error) {
-        alert('Connection failed: ' + error.message);
-    }
-}
-document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
-    </script>
-    <script>
-        async function signInWithEthereum() {
-    if (!window.signer) {
-        alert('Connect wallet first.');
-        return;
-    }
-
-    try {
-        const nonceResponse = await fetch('/api/nonce');
-        const { nonce } = await nonceResponse.json();
-
-        const message = new SiweMessage({
-            domain: window.location.host,
-            address: window.userAddress,
-            statement: 'Sign in to 39 Quantum to publish research.',
-            uri: window.location.origin,
-            version: '1',
-            chainId: 8453, // Base Mainnet
-            nonce: nonce
-        });
-
-        const signature = await window.signer.signMessage(message.prepareMessage());
-        
-        const authResponse = await fetch('/api/auth', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                message: message,
-                signature: signature
-            })
-        });
-
-        if (authResponse.ok) {
-            alert(' Signed in successfully!');
-            window.isAuthenticated = true;
-            localStorage.setItem('session', 'authenticated');
-            location.reload();
-        } else {
-            alert(' Authentication failed.');
-        }
-    } catch (error) {
-        console.error('Auth error:', error);
-    }
-}
-    </script>
-    <script>
         function checkAuth() {
-    const isAuthenticated = localStorage.getItem('session') === 'authenticated';
-    const submitBtn = document.getElementById('submitPaperBtn');
-    const signInPrompt = document.getElementById('signInPrompt');
-    
-    if (isAuthenticated) {
-        submitBtn.style.display = 'block';
-        signInPrompt.style.display = 'none';
-    } else {
-        submitBtn.style.display = 'none';
-        signInPrompt.style.display = 'block';
-    }
-}
+            const isAuthenticated = localStorage.getItem('session') === 'authenticated';
+            // You can use this to show/hide elements
+            // For now, it just logs the status
+            console.log('Authenticated:', isAuthenticated);
+            if (isAuthenticated && userAddress) {
+                document.getElementById('walletStatus').innerHTML = `✅ Signed in as ${userAddress.slice(0,6)}...`;
+            }
+        }
+
+        // ========== INIT ==========
+
+        // Check if wallet is already connected on page load
+        window.addEventListener('load', async () => {
+            checkAuth();
+            loadPapers();
+        });
+
+        // Add a sign-in button if needed (optional)
+        // You can add a "Sign In" button in your nav if you want
     </script>
 </body>
 </html>
