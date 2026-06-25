@@ -141,13 +141,20 @@
             btn.disabled = true;
 
             try {
-                const response = await fetch('/api/replies', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        topic_id: Number(topicId),
-                        content,
-                        author_name: author
+               const token = localStorage.getItem('session');
+
+               const response = await fetch('/api/replies', {
+               method: 'POST',
+               headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+    },
+    body: JSON.stringify({
+        topic_id: Number(topicId),
+        content,
+        author_name: author
+    })
+});
                     })
                 });
 
