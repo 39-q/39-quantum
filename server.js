@@ -1,9 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const crypto = require('crypto');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
-const { SiweMessage } = require('siwe');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,8 +15,17 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Store nonces temporarily (use Redis or database in production)
-const nonces = new Map();
+// Simple rate limiting
+const rateLimits = {};
+
+function checkRateLimit(address) {
+    const now = Date.now();
+    if (rateLimits[address] && (now - rateLimits[address]) < 30000) { // 30 seconds
+        return false;
+    }
+    rateLimits[address] = now;
+    return true;
+}
 
 // ========== EXPLANATIONS ==========
 
@@ -58,11 +65,20 @@ app.get('/api/explanations/:id', async (req, res) => {
 });
 
 // POST a new explanation
-app.post('/api/explanations', requireAuth, async (req, res) => {
+app.post('/api/explanations', async (req, res) => {
     try {
         const { title, arxiv_id, paper_id, content, author } = req.body;
+        
         if (!title || !content) {
             return res.status(400).json({ error: 'Title and content are required' });
+        }
+
+        // Use wallet address as author, or fallback to Anonymous
+        const authorAddress = author || 'anonymous';
+
+        // Rate limiting by wallet address
+        if (authorAddress !== 'anonymous' && !checkRateLimit(authorAddress)) {
+            return res.status(429).json({ error: 'Too many posts. Please wait 30 seconds.' });
         }
 
         const newItem = {
@@ -71,7 +87,7 @@ app.post('/api/explanations', requireAuth, async (req, res) => {
             arxiv_id: arxiv_id || null,
             paper_id: paper_id || null,
             content,
-            author: author || 'Anonymous',
+            author: authorAddress,
             timestamp: new Date().toISOString(),
             upvotes: 0
         };
@@ -105,12 +121,19 @@ app.get('/api/research', async (req, res) => {
     }
 });
 
-// POST a new paper (PROTECTED - requires auth)
-app.post('/api/research', requireAuth, async (req, res) => {
+// POST a new paper
+app.post('/api/research', async (req, res) => {
     try {
         const { title, authors, institution, abstract, fundingUrl, authorWallet } = req.body;
+        
         if (!title || !abstract) {
             return res.status(400).json({ error: 'Title and abstract are required' });
+        }
+
+        const walletAddress = authorWallet || 'anonymous';
+
+        if (walletAddress !== 'anonymous' && !checkRateLimit(walletAddress)) {
+            return res.status(429).json({ error: 'Too many posts. Please wait 30 seconds.' });
         }
 
         const newItem = {
@@ -120,8 +143,8 @@ app.post('/api/research', requireAuth, async (req, res) => {
             institution: institution || '',
             abstract,
             fundingUrl: fundingUrl || null,
-            authorWallet: authorWallet || req.userAddress, // Use authenticated address if not provided
-            contentHash: crypto.createHash('sha256').update(abstract).digest('hex').substring(0, 16),
+            authorWallet: walletAddress,
+            contentHash: require('crypto').createHash('sha256').update(abstract).digest('hex').substring(0, 16),
             timestamp: new Date().toISOString(),
             views: 0
         };
@@ -162,9 +185,17 @@ app.get('/api/research/:id', async (req, res) => {
 app.post('/api/view/:id', async (req, res) => {
     try {
         const id = Number(req.params.id);
+        // Simple increment - get current, add 1
+        const { data: current } = await supabase
+            .from('research')
+            .select('views')
+            .eq('id', id)
+            .single();
+        
+        const newViews = (current?.views || 0) + 1;
         const { error } = await supabase
             .from('research')
-            .update({ views: supabase.rpc('increment', { row_id: id }) })
+            .update({ views: newViews })
             .eq('id', id);
         if (error) throw error;
         res.json({ success: true });
@@ -174,7 +205,7 @@ app.post('/api/view/:id', async (req, res) => {
     }
 });
 
-// ========== FORUM ==========
+// ========== FORUM TOPICS ==========
 
 // GET all topics
 app.get('/api/topics', async (req, res) => {
@@ -216,25 +247,26 @@ app.get('/api/topics/:id', async (req, res) => {
     }
 });
 
-// POST a new topic (PROTECTED - requires auth)
-app.post('/api/topics', requireAuth, async (req, res) => {
-    console.log('===== POST /api/topics =====');
-    console.log('Request body:', req.body);
-    console.log('User address:', req.userAddress);
-    
+// POST a new topic
+app.post('/api/topics', async (req, res) => {
     try {
         const { title, content, author_name, category, paper_id } = req.body;
         
         if (!title || !content) {
-            console.log('Missing title or content');
             return res.status(400).json({ error: 'Title and content are required' });
+        }
+
+        const walletAddress = author_name || 'anonymous';
+
+        if (walletAddress !== 'anonymous' && !checkRateLimit(walletAddress)) {
+            return res.status(429).json({ error: 'Too many posts. Please wait 30 seconds.' });
         }
 
         const newTopic = {
             id: Date.now(),
             title: title,
             content: content,
-            author_name: author_name || req.userAddress.slice(0, 10) || 'Anonymous',
+            author_name: walletAddress,
             category: category || 'general',
             paper_id: paper_id || null,
             created_at: new Date().toISOString(),
@@ -242,8 +274,6 @@ app.post('/api/topics', requireAuth, async (req, res) => {
             reply_count: 0,
             upvotes: 0
         };
-
-        console.log('Attempting to insert:', newTopic);
 
         const { data, error } = await supabase
             .from('topics')
@@ -255,27 +285,32 @@ app.post('/api/topics', requireAuth, async (req, res) => {
             return res.status(500).json({ error: 'Supabase error: ' + error.message });
         }
 
-        console.log('Insert successful:', data);
         res.status(201).json(data[0]);
     } catch (error) {
-        console.error('Catch block error:', error);
+        console.error('Error creating topic:', error);
         res.status(500).json({ error: 'Server error: ' + error.message });
     }
 });
 
-// POST a reply to a topic (PROTECTED - requires auth)
-app.post('/api/replies', requireAuth, async (req, res) => {
+// POST a reply to a topic
+app.post('/api/replies', async (req, res) => {
     try {
         const { topic_id, content, author_name, parent_id } = req.body;
         if (!topic_id || !content) {
             return res.status(400).json({ error: 'Topic ID and content are required' });
         }
 
+        const walletAddress = author_name || 'anonymous';
+
+        if (walletAddress !== 'anonymous' && !checkRateLimit(walletAddress)) {
+            return res.status(429).json({ error: 'Too many posts. Please wait 30 seconds.' });
+        }
+
         const newReply = {
             id: Date.now(),
             topic_id: Number(topic_id),
             content,
-            author_name: author_name || req.userAddress.slice(0, 10) || 'Anonymous',
+            author_name: walletAddress,
             parent_id: parent_id || null,
             created_at: new Date().toISOString()
         };
@@ -306,100 +341,11 @@ app.post('/api/replies', requireAuth, async (req, res) => {
     }
 });
 
-// ========== AUTH ENDPOINTS ==========
-
-// Generate nonce for signing
-app.get('/api/nonce', (req, res) => {
-    const nonce = crypto.randomBytes(16).toString('hex');
-    nonces.set(nonce, Date.now());
-    // Clean up old nonces (older than 5 minutes)
-    for (const [key, time] of nonces) {
-        if (Date.now() - time > 300000) {
-            nonces.delete(key);
-        }
-    }
-    res.json({ nonce });
-});
-
-// Verify signature and authenticate
-app.post('/api/auth', async (req, res) => {
-    try {
-        const { message, signature } = req.body;
-        
-        if (!message || !signature) {
-            return res.status(400).json({ error: 'Message and signature required' });
-        }
-
-        // Verify the signature
-        const siweMessage = new SiweMessage(message);
-        const fields = await siweMessage.verify({ signature });
-
-        // Check nonce
-        if (!nonces.has(fields.nonce)) {
-            return res.status(401).json({ error: 'Invalid or expired nonce' });
-        }
-        nonces.delete(fields.nonce);
-
-        // Check chain ID (should be Base = 8453)
-        if (fields.chainId !== 8453) {
-            return res.status(401).json({ error: 'Please switch to Base network' });
-        }
-
-        // Upsert user in Supabase
-        const { data: user, error } = await supabase
-            .from('users')
-            .upsert({
-                address: fields.address,
-                last_active: new Date().toISOString()
-            })
-            .select();
-
-        if (error) throw error;
-
-        // Generate session token (simple JWT or just return success)
-        res.json({
-            success: true,
-            address: fields.address,
-            user: user?.[0] || { address: fields.address }
-        });
-
-    } catch (error) {
-        console.error('Auth error:', error);
-        res.status(401).json({ error: error.message || 'Authentication failed' });
-    }
-});
-
-// Get current user from session
-app.get('/api/me', async (req, res) => {
-    const address = req.headers['x-user-address'];
-    if (!address) {
-        return res.status(401).json({ error: 'Not authenticated' });
-    }
-
-    const { data: user, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('address', address)
-        .single();
-
-    if (error) {
-        return res.json({ address, display_name: 'Anonymous' });
-    }
-    res.json(user);
-});
-
-// ========== AUTH MIDDLEWARE ==========
-
-function requireAuth(req, res, next) {
-    const userAddress = req.headers['x-user-address'];
-    if (!userAddress) {
-        return res.status(401).json({ error: 'Please sign in first' });
-    }
-    req.userAddress = userAddress;
-    next();
-}
-
 // ========== STATIC PAGES ==========
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 app.get('/explanations.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'explanations.html'));
@@ -409,7 +355,7 @@ app.get('/add-explanation.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'add-explanation.html'));
 });
 
-app.get('/explanation/:id', (req, res) => {
+app.get('/explanation.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'explanation.html'));
 });
 
@@ -421,18 +367,14 @@ app.get('/new-topic.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'new-topic.html'));
 });
 
-app.get('/topic/:id', (req, res) => {
+app.get('/topic.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'topic.html'));
-});
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // ========== START ==========
 
 app.listen(PORT, () => {
-    console.log(` 39 Quantum running on port ${PORT}`);
-    console.log(` Database: Supabase`);
-    console.log(` Read. Publish. Explain.`);
+    console.log(`🚀 39 Quantum running on port ${PORT}`);
+    console.log(`📡 Database: Supabase`);
+    console.log(`📚 Read. Publish. Explain.`);
 });
