@@ -283,7 +283,7 @@ async function connectWallet() {
 
         document.getElementById('connectWalletBtn').textContent = `Connected: ${userAddress.slice(0,6)}...`;
         document.getElementById('connectWalletBtn').disabled = true;
-        document.getElementById('walletStatus').innerHTML = `✅ Connected to Base as ${userAddress}`;
+        document.getElementById('walletStatus').innerHTML = ` Connected to Base as ${userAddress}`;
         window.userAddress = userAddress;
         window.signer = signer;
     } catch (error) {
@@ -291,6 +291,51 @@ async function connectWallet() {
     }
 }
 document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
+    </script>
+    <script>
+        async function signInWithEthereum() {
+    if (!window.signer) {
+        alert('Connect wallet first.');
+        return;
+    }
+
+    try {
+        const nonceResponse = await fetch('/api/nonce');
+        const { nonce } = await nonceResponse.json();
+
+        const message = new SiweMessage({
+            domain: window.location.host,
+            address: window.userAddress,
+            statement: 'Sign in to 39 Quantum to publish research.',
+            uri: window.location.origin,
+            version: '1',
+            chainId: 8453, // Base Mainnet
+            nonce: nonce
+        });
+
+        const signature = await window.signer.signMessage(message.prepareMessage());
+        
+        const authResponse = await fetch('/api/auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                message: message,
+                signature: signature
+            })
+        });
+
+        if (authResponse.ok) {
+            alert(' Signed in successfully!');
+            window.isAuthenticated = true;
+            localStorage.setItem('session', 'authenticated');
+            location.reload();
+        } else {
+            alert(' Authentication failed.');
+        }
+    } catch (error) {
+        console.error('Auth error:', error);
+    }
+}
     </script>
 </body>
 </html>
