@@ -32,7 +32,6 @@
         .footer { text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #e5e5e5; color: #6b7280; font-size: 0.8rem; }
         .btn-wallet { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 6px; font-size: 1rem; text-decoration: none; cursor: pointer; border: none; transition: background 0.2s; background: #092ee6; color: white; }
         .btn-wallet:hover { background: #f7f8fc; color: #092ee6; }
-        
         #walletStatus { text-align: center; margin: 1rem 0; font-size: 0.9rem; }
     </style>
 </head>
@@ -45,7 +44,6 @@
                 <a href="/explanations.html">Explanations</a>
                 <a href="/add-explanation.html">Write Explanation</a>
                 <button id="connectWalletBtn" class="btn-wallet">Connect Wallet</button>
-                <button id="signInBtn" class="btn-signin" style="display: none;">Sign In</button>
             </nav>
         </header>
 
@@ -101,13 +99,14 @@
 
                 document.getElementById('connectWalletBtn').textContent = `✅ ${userAddress.slice(0,6)}...`;
                 document.getElementById('connectWalletBtn').disabled = true;
-                document.getElementById('walletStatus').innerHTML = `✅ Wallet connected`;
-                
-                // Show Sign In button
-                document.getElementById('signInBtn').style.display = 'inline-block';
+                document.getElementById('walletStatus').innerHTML = `✅ Connected`;
                 
                 window.userAddress = userAddress;
                 window.signer = signer;
+
+                // Automatically sign in after connection
+                await signInWithEthereum();
+
             } catch (error) {
                 alert('Connection failed: ' + error.message);
             }
@@ -115,7 +114,7 @@
 
         document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
 
-        // ========== SIGN IN ==========
+        // ========== SIGN IN (AUTOMATIC) ==========
 
         async function signInWithEthereum() {
             if (!window.signer) {
@@ -130,7 +129,7 @@
                 const message = new SiweMessage({
                     domain: window.location.host,
                     address: window.userAddress,
-                    statement: 'Sign in to 39 Quantum to publish research.',
+                    statement: 'Sign in to 39 Quantum.',
                     uri: window.location.origin,
                     version: '1',
                     chainId: 8453,
@@ -146,11 +145,8 @@
                 });
 
                 if (authResponse.ok) {
-                    alert('✅ Signed in successfully!');
                     localStorage.setItem('session', 'authenticated');
-                    document.getElementById('signInBtn').style.display = 'none';
                     document.getElementById('walletStatus').innerHTML = `✅ Signed in as ${window.userAddress.slice(0,6)}...`;
-                    location.reload();
                 } else {
                     alert('❌ Authentication failed.');
                 }
@@ -159,8 +155,6 @@
                 alert('Error: ' + error.message);
             }
         }
-
-        document.getElementById('signInBtn').addEventListener('click', signInWithEthereum);
 
         // ========== LOAD PAPERS ==========
 
