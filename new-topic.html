@@ -2,7 +2,151 @@
 <html>
 <head>
     <title>New Topic - 39 Quantum</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #f8f9fa;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1a2a3a;
+            text-decoration: none;
+        }
+
+        nav a {
+            margin-left: 1.5rem;
+            text-decoration: none;
+            color: #4a5568;
+        }
+
+        nav a:hover {
+            color: #1a2a3a;
+        }
+
+        .nav-btn {
+            display: inline-block;
+            background: #1a2a3a;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover {
+            background: #2c3e50;
+            color: white;
+        }
+
+        h1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: #1a2a3a;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            background: #2c3e50;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            background: #e5e5e5;
+            color: #1a1a1a;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e5e5;
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
+        #message {
+            margin-top: 1rem;
+            padding: 0.5rem;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -17,7 +161,7 @@
         </header>
 
         <h1>Start New Discussion</h1>
-        <p>Share a question, idea, or paper discussion with the quantum community.</p>
+        <p class="subtitle">Share a question, idea, or paper discussion with the quantum community.</p>
 
         <form id="topicForm">
             <div class="form-group">
@@ -41,22 +185,32 @@
                 <label for="author">Your Name</label>
                 <input type="text" id="author" placeholder="Anonymous">
             </div>
-            <button type="submit" class="btn-primary">Publish Topic</button>
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn-primary">Publish Topic</button>
+                <a href="/forum.html" class="btn-secondary">Cancel</a>
+            </div>
         </form>
 
-        <a href="/forum.html">← Back to Forum</a>
+        <div id="message"></div>
+
+        <div class="footer">
+            <p>© 2026 39 Quantum · Read. Publish. Explain.</p>
+        </div>
     </div>
 
     <script>
-        document.getElementById('topicForm').onsubmit = async function(e) {
+        document.getElementById('topicForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const data = {
-                title: document.getElementById('title').value,
-                content: document.getElementById('content').value,
-                author_name: document.getElementById('author').value || 'Anonymous',
-                category: document.getElementById('category').value
-            };
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const author = document.getElementById('author').value || 'Anonymous';
+            const category = document.getElementById('category').value;
+
+            if (!title || !content) {
+                document.getElementById('message').innerHTML = '<p style="color: red;">❌ Title and content are required.</p>';
+                return;
+            }
 
             const submitBtn = this.querySelector('button[type="submit"]');
             submitBtn.textContent = 'Publishing...';
@@ -65,29 +219,39 @@
             try {
                 const token = localStorage.getItem('session');
 
+                if (!token) {
+                    document.getElementById('message').innerHTML = '<p style="color: red;">❌ Please sign in first.</p>';
+                    submitBtn.textContent = 'Publish Topic';
+                    submitBtn.disabled = false;
+                    return;
+                }
+
                 const response = await fetch('/api/topics', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + token
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({ title, content, author_name: author, category })
                 });
 
                 if (response.ok) {
-                    alert('✅ Topic published!');
-                    window.location.href = '/forum.html';
+                    document.getElementById('message').innerHTML = '<p style="color: green;"> Topic published!</p>';
+                    document.getElementById('topicForm').reset();
+                    setTimeout(() => {
+                        window.location.href = '/forum.html';
+                    }, 1500);
                 } else {
                     const error = await response.json();
-                    alert('❌ Failed: ' + (error.error || 'Unknown error'));
+                    document.getElementById('message').innerHTML = '<p style="color: red;">❌ Failed: ' + (error.error || 'Unknown error') + '</p>';
                 }
             } catch (error) {
-                alert('❌ Error: ' + error.message);
+                document.getElementById('message').innerHTML = '<p style="color: red;">❌ Error: ' + error.message + '</p>';
             } finally {
                 submitBtn.textContent = 'Publish Topic';
                 submitBtn.disabled = false;
             }
-        };
+        });
     </script>
 </body>
 </html>
