@@ -373,96 +373,21 @@ app.post('/api/auth', async (req, res) => {
 
 // ========== AUTH ENDPOINTS ==========
 
-// Generate nonce for signing
-app.get('/api/nonce', (req, res) => {
-    const nonce = crypto.randomBytes(16).toString('hex');
-    nonces.set(nonce, Date.now());
-    // Clean up old nonces (older than 5 minutes)
-    for (const [key, time] of nonces) {
-        if (Date.now() - time > 300000) {
-            nonces.delete(key);
-        }
-    }
-    res.json({ nonce });
-});
-
-// Verify signature and authenticate
-app.post('/api/auth', async (req, res) => {
-    try {
-        const { message, signature } = req.body;
-        
-        if (!message || !signature) {
-            return res.status(400).json({ error: 'Message and signature required' });
-        }
-
-        // Verify the signature
-        const siweMessage = new SiweMessage(message);
-        const fields = await siweMessage.verify({ signature });
-
-        // Check nonce
-        if (!nonces.has(fields.nonce)) {
-            return res.status(401).json({ error: 'Invalid or expired nonce' });
-        }
-        nonces.delete(fields.nonce);
-
-        // Check chain ID (should be Base = 8453)
-        if (fields.chainId !== 8453) {
-            return res.status(401).json({ error: 'Please switch to Base network' });
-        }
-
-        // User is authenticated
-        // Upsert user in Supabase
-        const { data: user, error } = await supabase
-            .from('users')
-            .upsert({
-                address: fields.address,
-                last_active: new Date().toISOString()
-            })
-            .select();
-
-        if (error) throw error;
-
-        // Generate session token (simple JWT or just return success)
-        res.json({
-            success: true,
-            address: fields.address,
-            user: user?.[0] || { address: fields.address }
-        });
-
-    } catch (error) {
-        console.error('Auth error:', error);
-        res.status(401).json({ error: error.message || 'Authentication failed' });
-    }
-});
-
-// Get current user from session
-app.get('/api/me', async (req, res) => {
-    const address = req.headers['x-user-address'];
-    if (!address) {
-        return res.status(401).json({ error: 'Not authenticated' });
-    }
-
-    const { data: user, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('address', address)
-        .single();
-
-    if (error) {
-        return res.json({ address, display_name: 'Anonymous' });
-    }
-    res.json(user);
-});
-
-// Middleware to check authentication
 function requireAuth(req, res, next) {
-    const address = req.headers['x-user-address'];
-    if (!address) {
-        return res.status(401).json({ error: 'Please sign in first' });
+    // In production, check JWT or session token
+    const userAddress = req.headers['x-user-address'];
+    if (!userAddress) {
+        return res.status(401).json({ error: 'Please sign in first.' });
     }
-    req.userAddress = address;
+    req.userAddress = userAddress;
     next();
 }
+
+app.post('/api/research', requireAuth, async (req, res) => {
+    // User is authenticated. Proceed with publishing.
+    const { title, authors, abstract } = req.body;
+    // ... save paper with req.userAddress as author
+});
 
 // ========== START ==========
 
