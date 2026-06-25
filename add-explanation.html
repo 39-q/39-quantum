@@ -132,6 +132,53 @@
             background: #d1d5db;
         }
 
+        .wallet-status {
+            background: #f0f4ff;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #d1d9e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wallet-status .address {
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #1a2a3a;
+        }
+
+        .wallet-status .status {
+            font-size: 0.85rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .wallet-status .status.connected {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .wallet-status .status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .wallet-btn {
+            background: #1a2a3a;
+            color: white;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .wallet-btn:hover {
+            background: #2c3e50;
+        }
+
         .footer {
             text-align: center;
             margin-top: 3rem;
@@ -144,6 +191,11 @@
         #message {
             margin-top: 1rem;
             padding: 0.5rem;
+        }
+
+        .small {
+            color: #6b7280;
+            font-size: 0.85rem;
         }
     </style>
 </head>
@@ -161,6 +213,18 @@
         <h1>Write an Explanation</h1>
         <p class="subtitle">Explain a quantum research paper to help others understand it.</p>
 
+        <!-- Wallet Status Bar -->
+        <div class="wallet-status">
+            <div>
+                <strong>Wallet:</strong>
+                <span class="address" id="walletDisplay">Not connected</span>
+            </div>
+            <div>
+                <span class="status disconnected" id="walletStatus">Disconnected</span>
+                <button class="wallet-btn" id="walletBtn">Connect Wallet</button>
+            </div>
+        </div>
+
         <form id="explanationForm">
             <div class="form-group">
                 <label for="title">Title</label>
@@ -169,7 +233,7 @@
             <div class="form-group">
                 <label for="arxiv_id">arXiv ID</label>
                 <input type="text" id="arxiv_id" placeholder="e.g., 2405.12345">
-                <small style="color: #6b7280;">Optional. The arXiv ID of the paper you're explaining.</small>
+                <span class="small">Optional. The arXiv ID of the paper you're explaining.</span>
             </div>
             <div class="form-group">
                 <label for="content">Explanation</label>
@@ -178,7 +242,7 @@
             <div class="form-group">
                 <label for="author">Your Name</label>
                 <input type="text" id="author" placeholder="Anonymous">
-                <small style="color: #6b7280;">Optional. This will be displayed with your explanation.</small>
+                <span class="small">Optional. This will be displayed with your explanation.</span>
             </div>
             <div style="display: flex; gap: 1rem;">
                 <button type="submit" class="btn-primary">Publish Explanation</button>
@@ -194,6 +258,80 @@
     </div>
 
     <script>
+        // ========== WALLET CONNECTION ==========
+        let walletAddress = null;
+
+        const walletBtn = document.getElementById('walletBtn');
+        const walletDisplay = document.getElementById('walletDisplay');
+        const walletStatus = document.getElementById('walletStatus');
+
+        async function connectWallet() {
+            try {
+                // Check if MetaMask is installed
+                if (typeof window.ethereum === 'undefined') {
+                    alert('Please install MetaMask or another Ethereum wallet.');
+                    return;
+                }
+
+                // Request account access
+                const accounts = await window.ethereum.request({ 
+                    method: 'eth_requestAccounts' 
+                });
+
+                if (accounts.length > 0) {
+                    walletAddress = accounts[0];
+                    updateWalletUI();
+                }
+            } catch (error) {
+                console.error('Wallet connection error:', error);
+                alert('Failed to connect wallet: ' + error.message);
+            }
+        }
+
+        function updateWalletUI() {
+            if (walletAddress) {
+                walletDisplay.textContent = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4);
+                walletStatus.textContent = 'Connected';
+                walletStatus.className = 'status connected';
+                walletBtn.textContent = 'Disconnect';
+            } else {
+                walletDisplay.textContent = 'Not connected';
+                walletStatus.textContent = 'Disconnected';
+                walletStatus.className = 'status disconnected';
+                walletBtn.textContent = 'Connect Wallet';
+            }
+        }
+
+        // Connect/Disconnect button
+        walletBtn.addEventListener('click', async function() {
+            if (walletAddress) {
+                // Disconnect
+                walletAddress = null;
+                updateWalletUI();
+            } else {
+                await connectWallet();
+            }
+        });
+
+        // Check if already connected on page load
+        if (typeof window.ethereum !== 'undefined' && window.ethereum.selectedAddress) {
+            walletAddress = window.ethereum.selectedAddress;
+            updateWalletUI();
+        }
+
+        // Listen for account changes
+        if (typeof window.ethereum !== 'undefined') {
+            window.ethereum.on('accountsChanged', function(accounts) {
+                if (accounts.length > 0) {
+                    walletAddress = accounts[0];
+                } else {
+                    walletAddress = null;
+                }
+                updateWalletUI();
+            });
+        }
+
+        // ========== FORM SUBMISSION ==========
         document.getElementById('explanationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -212,25 +350,25 @@
             submitBtn.disabled = true;
 
             try {
-                const token = localStorage.getItem('session');
-
-                if (!token) {
-                    document.getElementById('message').innerHTML = '<p style="color: red;">❌ Please sign in first.</p>';
-                    submitBtn.textContent = 'Publish Explanation';
-                    submitBtn.disabled = false;
-                    return;
-                }
+                // Use wallet address as author, or fallback to entered name
+                const authorName = walletAddress || author;
 
                 const response = await fetch('/api/explanations', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ title, arxiv_id, content, author })
+                    body: JSON.stringify({ 
+                        title, 
+                        arxiv_id, 
+                        content, 
+                        author: authorName 
+                    })
                 });
 
-                if (response.ok) {
+                if (response.status === 429) {
+                    document.getElementById('message').innerHTML = '<p style="color: orange;">⏳ Too many posts. Please wait 30 seconds.</p>';
+                } else if (response.ok) {
                     document.getElementById('message').innerHTML = '<p style="color: green;">✅ Explanation published!</p>';
                     document.getElementById('explanationForm').reset();
                     setTimeout(() => {
