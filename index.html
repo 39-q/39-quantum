@@ -5,41 +5,187 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #f8f9fa; color: #1a1a1a; line-height: 1.6; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e5e5; }
-        .logo { font-size: 1.5rem; font-weight: bold; color: #1a2a3a; text-decoration: none; }
-        nav a { margin-left: 1.5rem; text-decoration: none; color: #4a5568; }
-        nav a:hover { color: #1a2a3a; }
-        .hero { text-align: center; margin: 3rem 0; }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; color: #1a1a1a; }
-        .hero p { font-size: 1.125rem; color: #4a5568; max-width: 600px; margin: 0 auto 2rem auto; }
-        .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-        .btn-primary, .btn-outline { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 4px; font-size: 1rem; text-decoration: none; cursor: pointer; border: none; transition: background 0.2s; }
-        .btn-primary { background: #1a2a3a; color: white; }
-        .btn-primary:hover { background: #2c3e50; }
-        .btn-outline { background: transparent; color: #1a2a3a; border: 1px solid #1a2a3a; }
-        .btn-outline:hover { background: #1a2a3a; color: white; }
-        .papers { margin-top: 3rem; }
-        .papers h2 { font-size: 1.5rem; margin-bottom: 1.5rem; }
-        .paper-card { background: white; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; }
-        .paper-title { font-weight: bold; font-size: 1.125rem; margin-bottom: 0.25rem; }
-        .paper-authors { font-size: 0.9rem; color: #6b7280; margin-bottom: 0.5rem; }
-        .paper-abstract { font-size: 0.95rem; color: #4a5568; }
-        .paper-link { display: inline-block; margin-top: 0.75rem; color: #1a2a3a; text-decoration: underline; font-size: 0.9rem; }
-        .paper-link:hover { text-decoration: none; }
-        .footer { text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #e5e5e5; color: #6b7280; font-size: 0.8rem; }
-        .btn-wallet { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 6px; font-size: 1rem; text-decoration: none; cursor: pointer; border: none; transition: background 0.2s; background: #092ee6; color: white; }
-        .btn-wallet:hover { background: #f7f8fc; color: #092ee6; }
-        #walletStatus { text-align: center; margin: 1rem 0; font-size: 0.9rem; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #f8f9fa;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1a2a3a;
+            text-decoration: none;
+        }
+
+        nav a {
+            margin-left: 1.5rem;
+            text-decoration: none;
+            color: #4a5568;
+        }
+
+        nav a:hover {
+            color: #1a2a3a;
+        }
+
+        .hero {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: #4a5568;
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-outline {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background: #1a2a3a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2c3e50;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #1a2a3a;
+            border: 1px solid #1a2a3a;
+        }
+
+        .btn-outline:hover {
+            background: #1a2a3a;
+            color: white;
+        }
+
+        .papers {
+            margin-top: 3rem;
+        }
+
+        .papers h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .paper-card {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .paper-title {
+            font-weight: bold;
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .paper-authors {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .paper-abstract {
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+
+        .paper-link {
+            display: inline-block;
+            margin-top: 0.75rem;
+            color: #1a2a3a;
+            text-decoration: underline;
+            font-size: 0.9rem;
+        }
+
+        .paper-link:hover {
+            text-decoration: none;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e5e5;
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
+        .btn-wallet {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+            background: #092ee6;
+            color: white;
+        }
+
+        .btn-wallet:hover {
+            background: #f7f8fc;
+            color: #092ee6; 
+        }
+            
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <a href="/" class="logo">39 Quantum</a>
-            <nav>
+            <nav> 
                 <a href="/">Explore</a>
                 <a href="/explanations.html">Explanations</a>
                 <a href="/add-explanation.html">Write Explanation</a>
@@ -63,106 +209,22 @@
             <div id="papersList">Coming soon...</div>
         </div>
 
-        <div id="walletStatus"></div>
-
         <div class="footer">
             <p>© 2026 39 Quantum · Read. Publish. Explain.</p>
-            <p style="font-size: 0.8rem; color: #6b7280;">Built by <a href="https://github.com/39-q" style="color: #1a2a3a;">@39-q</a></p>
+            <p style="font-size: 0.8rem; color: #6b7280;">
+        Built by <a href="https://github.com/39-q" style="color: #1a2a3a;">@39-q</a>
+            </p> 
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/siwe@2/dist/siwe.umd.min.js"></script>
     <script>
-        let userAddress = null;
-        let signer = null;
-
-        // ========== CONNECT WALLET ==========
-
-        async function connectWallet() {
-            if (typeof window.ethereum === 'undefined') {
-                alert('Please install MetaMask or Coinbase Wallet.');
-                window.open('https://metamask.io/download/', '_blank');
-                return;
-            }
-
-            try {
-                const provider = new ethers.BrowserProvider(window.ethereum);
-                await provider.send("eth_requestAccounts", []);
-                signer = await provider.getSigner();
-                userAddress = await signer.getAddress();
-
-                await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: '0x2105' }]
-                });
-
-                document.getElementById('connectWalletBtn').textContent = `✅ ${userAddress.slice(0,6)}...`;
-                document.getElementById('connectWalletBtn').disabled = true;
-                document.getElementById('walletStatus').innerHTML = `✅ Connected`;
-                
-                window.userAddress = userAddress;
-                window.signer = signer;
-
-                // Automatically sign in after connection
-                await signInWithEthereum();
-
-            } catch (error) {
-                alert('Connection failed: ' + error.message);
-            }
-        }
-
-        document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
-
-        // ========== SIGN IN (AUTOMATIC) ==========
-
-        async function signInWithEthereum() {
-            if (!window.signer) {
-                alert('Connect wallet first.');
-                return;
-            }
-
-            try {
-                const nonceResponse = await fetch('/api/nonce');
-                const { nonce } = await nonceResponse.json();
-
-                const message = new SiweMessage({
-                    domain: window.location.host,
-                    address: window.userAddress,
-                    statement: 'Sign in to 39 Quantum.',
-                    uri: window.location.origin,
-                    version: '1',
-                    chainId: 8453,
-                    nonce: nonce
-                });
-
-                const signature = await window.signer.signMessage(message.prepareMessage());
-
-                const authResponse = await fetch('/api/auth', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message, signature })
-                });
-
-                if (authResponse.ok) {
-                    localStorage.setItem('session', 'authenticated');
-                    document.getElementById('walletStatus').innerHTML = `✅ Signed in as ${window.userAddress.slice(0,6)}...`;
-                } else {
-                    alert('❌ Authentication failed.');
-                }
-            } catch (error) {
-                console.error('Auth error:', error);
-                alert('Error: ' + error.message);
-            }
-        }
-
-        // ========== LOAD PAPERS ==========
+        const API_URL = '/api/research';
 
         async function loadPapers() {
             const papersDiv = document.getElementById('papersList');
             papersDiv.innerHTML = 'Loading...';
             try {
-                const response = await fetch('/api/research');
+                const response = await fetch(API_URL);
                 const papers = await response.json();
                 if (papers.length === 0) {
                     papersDiv.innerHTML = '<div class="paper-card">No papers yet. Be the first to submit!</div>';
@@ -191,7 +253,44 @@
             });
         }
 
-        window.addEventListener('load', loadPapers);
+        loadPapers();
+    </script>
+    <div id="walletStatus"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
+<script>
+let userAddress = null;
+let signer = null;
+
+async function connectWallet() {
+    if (typeof window.ethereum === 'undefined') {
+        alert('Please install MetaMask or Coinbase Wallet.');
+        window.open('https://metamask.io/download/', '_blank');
+        return;
+    }
+
+    try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = await provider.getSigner();
+        userAddress = await signer.getAddress();
+        
+        // Switch to Base network
+        await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x2105' }] // Base Mainnet
+        });
+
+        document.getElementById('connectWalletBtn').textContent = `Connected: ${userAddress.slice(0,6)}...`;
+        document.getElementById('connectWalletBtn').disabled = true;
+        document.getElementById('walletStatus').innerHTML = ` Connected to Base as ${userAddress}`;
+        window.userAddress = userAddress;
+        window.signer = signer;
+    } catch (error) {
+        alert('Connection failed: ' + error.message);
+    }
+}
+document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
     </script>
 </body>
 </html>
