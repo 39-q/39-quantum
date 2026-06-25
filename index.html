@@ -337,5 +337,20 @@ document.getElementById('connectWalletBtn').addEventListener('click', connectWal
     }
 }
     </script>
+    <script>
+        function checkAuth() {
+    const isAuthenticated = localStorage.getItem('session') === 'authenticated';
+    const submitBtn = document.getElementById('submitPaperBtn');
+    const signInPrompt = document.getElementById('signInPrompt');
+    
+    if (isAuthenticated) {
+        submitBtn.style.display = 'block';
+        signInPrompt.style.display = 'none';
+    } else {
+        submitBtn.style.display = 'none';
+        signInPrompt.style.display = 'block';
+    }
+}
+    </script>
 </body>
 </html>
