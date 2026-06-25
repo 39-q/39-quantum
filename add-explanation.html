@@ -90,10 +90,15 @@
             submitBtn.disabled = true;
 
             try {
+                const token = localStorage.getItem('session');
                 const response = await fetch('/api/explanations', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+    },
+    body: JSON.stringify(data)
+});
                 });
 
                 if (response.ok) {
