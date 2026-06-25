@@ -5,191 +5,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            background: #f8f9fa;
-            color: #1a1a1a;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 3rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #e5e5e5;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #1a2a3a;
-            text-decoration: none;
-        }
-
-        nav a {
-            margin-left: 1.5rem;
-            text-decoration: none;
-            color: #4a5568;
-        }
-
-        nav a:hover {
-            color: #1a2a3a;
-        }
-
-        .hero {
-            text-align: center;
-            margin: 3rem 0;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #1a1a1a;
-        }
-
-        .hero p {
-            font-size: 1.125rem;
-            color: #4a5568;
-            max-width: 600px;
-            margin: 0 auto 2rem auto;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary, .btn-outline {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            font-size: 1rem;
-            text-decoration: none;
-            cursor: pointer;
-            border: none;
-            transition: background 0.2s;
-        }
-
-        .btn-primary {
-            background: #1a2a3a;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #2c3e50;
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: #1a2a3a;
-            border: 1px solid #1a2a3a;
-        }
-
-        .btn-outline:hover {
-            background: #1a2a3a;
-            color: white;
-        }
-
-        .papers {
-            margin-top: 3rem;
-        }
-
-        .papers h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .paper-card {
-            background: white;
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .paper-title {
-            font-weight: bold;
-            font-size: 1.125rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .paper-authors {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-bottom: 0.5rem;
-        }
-
-        .paper-abstract {
-            font-size: 0.95rem;
-            color: #4a5568;
-        }
-
-        .paper-link {
-            display: inline-block;
-            margin-top: 0.75rem;
-            color: #1a2a3a;
-            text-decoration: underline;
-            font-size: 0.9rem;
-        }
-
-        .paper-link:hover {
-            text-decoration: none;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #e5e5e5;
-            color: #6b7280;
-            font-size: 0.8rem;
-        }
-
-        .btn-wallet {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            text-decoration: none;
-            cursor: pointer;
-            border: none;
-            transition: background 0.2s;
-            background: #092ee6;
-            color: white;
-        }
-
-        .btn-wallet:hover {
-            background: #f7f8fc;
-            color: #092ee6; 
-        }
-            
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #f8f9fa; color: #1a1a1a; line-height: 1.6; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e5e5; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #1a2a3a; text-decoration: none; }
+        nav a { margin-left: 1.5rem; text-decoration: none; color: #4a5568; }
+        nav a:hover { color: #1a2a3a; }
+        .hero { text-align: center; margin: 3rem 0; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; color: #1a1a1a; }
+        .hero p { font-size: 1.125rem; color: #4a5568; max-width: 600px; margin: 0 auto 2rem auto; }
+        .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn-primary, .btn-outline { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 4px; font-size: 1rem; text-decoration: none; cursor: pointer; border: none; transition: background 0.2s; }
+        .btn-primary { background: #1a2a3a; color: white; }
+        .btn-primary:hover { background: #2c3e50; }
+        .btn-outline { background: transparent; color: #1a2a3a; border: 1px solid #1a2a3a; }
+        .btn-outline:hover { background: #1a2a3a; color: white; }
+        .papers { margin-top: 3rem; }
+        .papers h2 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+        .paper-card { background: white; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; }
+        .paper-title { font-weight: bold; font-size: 1.125rem; margin-bottom: 0.25rem; }
+        .paper-authors { font-size: 0.9rem; color: #6b7280; margin-bottom: 0.5rem; }
+        .paper-abstract { font-size: 0.95rem; color: #4a5568; }
+        .paper-link { display: inline-block; margin-top: 0.75rem; color: #1a2a3a; text-decoration: underline; font-size: 0.9rem; }
+        .paper-link:hover { text-decoration: none; }
+        .footer { text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #e5e5e5; color: #6b7280; font-size: 0.8rem; }
+        .btn-wallet { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 6px; font-size: 1rem; text-decoration: none; cursor: pointer; border: none; transition: background 0.2s; background: #092ee6; color: white; }
+        .btn-wallet:hover { background: #f7f8fc; color: #092ee6; }
+        .btn-signin { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 6px; font-size: 1rem; text-decoration: none; cursor: pointer; border: none; transition: background 0.2s; background: #10b981; color: white; }
+        .btn-signin:hover { background: #059669; }
+        #walletStatus { text-align: center; margin: 1rem 0; font-size: 0.9rem; }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <a href="/" class="logo">39 Quantum</a>
-            <nav> 
+            <nav>
                 <a href="/">Explore</a>
                 <a href="/explanations.html">Explanations</a>
                 <a href="/add-explanation.html">Write Explanation</a>
                 <button id="connectWalletBtn" class="btn-wallet">Connect Wallet</button>
+                <button id="signInBtn" class="btn-signin" style="display: none;">Sign In</button>
             </nav>
         </header>
 
@@ -209,23 +66,21 @@
             <div id="papersList">Coming soon...</div>
         </div>
 
+        <div id="walletStatus"></div>
+
         <div class="footer">
             <p>© 2026 39 Quantum · Read. Publish. Explain.</p>
-            <p style="font-size: 0.8rem; color: #6b7280;">
-        Built by <a href="https://github.com/39-q" style="color: #1a2a3a;">@39-q</a>
-            </p> 
+            <p style="font-size: 0.8rem; color: #6b7280;">Built by <a href="https://github.com/39-q" style="color: #1a2a3a;">@39-q</a></p>
         </div>
     </div>
 
-    <div id="walletStatus"></div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/siwe@2/dist/siwe.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/siwe@2/dist/siwe.umd.min.js"></script>
     <script>
-        // ========== WALLET CONNECTION ==========
-
         let userAddress = null;
         let signer = null;
+
+        // ========== CONNECT WALLET ==========
 
         async function connectWallet() {
             if (typeof window.ethereum === 'undefined') {
@@ -239,16 +94,19 @@
                 await provider.send("eth_requestAccounts", []);
                 signer = await provider.getSigner();
                 userAddress = await signer.getAddress();
-                
-                // Switch to Base network
+
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: '0x2105' }] // Base Mainnet
+                    params: [{ chainId: '0x2105' }]
                 });
 
                 document.getElementById('connectWalletBtn').textContent = `✅ ${userAddress.slice(0,6)}...`;
                 document.getElementById('connectWalletBtn').disabled = true;
-                document.getElementById('walletStatus').innerHTML = `✅ Connected to Base as ${userAddress}`;
+                document.getElementById('walletStatus').innerHTML = `✅ Wallet connected`;
+                
+                // Show Sign In button
+                document.getElementById('signInBtn').style.display = 'inline-block';
+                
                 window.userAddress = userAddress;
                 window.signer = signer;
             } catch (error) {
@@ -258,7 +116,7 @@
 
         document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
 
-        // ========== SIGN IN WITH ETHEREUM ==========
+        // ========== SIGN IN ==========
 
         async function signInWithEthereum() {
             if (!window.signer) {
@@ -281,20 +139,18 @@
                 });
 
                 const signature = await window.signer.signMessage(message.prepareMessage());
-                
+
                 const authResponse = await fetch('/api/auth', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: message,
-                        signature: signature
-                    })
+                    body: JSON.stringify({ message, signature })
                 });
 
                 if (authResponse.ok) {
                     alert('✅ Signed in successfully!');
-                    window.isAuthenticated = true;
                     localStorage.setItem('session', 'authenticated');
+                    document.getElementById('signInBtn').style.display = 'none';
+                    document.getElementById('walletStatus').innerHTML = `✅ Signed in as ${window.userAddress.slice(0,6)}...`;
                     location.reload();
                 } else {
                     alert('❌ Authentication failed.');
@@ -305,54 +161,15 @@
             }
         }
 
-        // ========== CHECK AUTH ON LOAD ==========
-
-function checkAuthStatus() {
-    const isAuthenticated = localStorage.getItem('session') === 'authenticated';
-    const walletBtn = document.getElementById('connectWalletBtn');
-    const signInBtn = document.getElementById('signInBtn');
-    const statusDiv = document.getElementById('walletStatus');
-    
-    if (isAuthenticated && window.userAddress) {
-        // User is signed in
-        if (walletBtn) {
-            walletBtn.textContent = `✅ ${window.userAddress.slice(0,6)}...`;
-            walletBtn.disabled = true;
-        }
-        if (statusDiv) {
-            statusDiv.innerHTML = `✅ Signed in as ${window.userAddress.slice(0,6)}...`;
-        }
-        // Hide sign-in prompt if it exists
-        const signInPrompt = document.getElementById('signInPrompt');
-        if (signInPrompt) signInPrompt.style.display = 'none';
-        // Show publish buttons
-        document.querySelectorAll('.auth-required').forEach(el => {
-            el.style.display = 'inline-block';
-        });
-    } else if (window.userAddress) {
-        // Wallet connected, but not signed in
-        if (walletBtn) {
-            walletBtn.textContent = `✅ ${window.userAddress.slice(0,6)}...`;
-            walletBtn.disabled = true;
-        }
-        if (statusDiv) {
-            statusDiv.innerHTML = `🔗 Wallet connected. <button onclick="signInWithEthereum()">Sign In</button>`;
-        }
-    }
-}
-
-// Call this after wallet connects and on page load
-window.addEventListener('load', checkAuthStatus);
+        document.getElementById('signInBtn').addEventListener('click', signInWithEthereum);
 
         // ========== LOAD PAPERS ==========
-
-        const API_URL = '/api/research';
 
         async function loadPapers() {
             const papersDiv = document.getElementById('papersList');
             papersDiv.innerHTML = 'Loading...';
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch('/api/research');
                 const papers = await response.json();
                 if (papers.length === 0) {
                     papersDiv.innerHTML = '<div class="paper-card">No papers yet. Be the first to submit!</div>';
@@ -381,28 +198,7 @@ window.addEventListener('load', checkAuthStatus);
             });
         }
 
-        // ========== CHECK AUTH ==========
-
-        function checkAuth() {
-            const isAuthenticated = localStorage.getItem('session') === 'authenticated';
-            // You can use this to show/hide elements
-            // For now, it just logs the status
-            console.log('Authenticated:', isAuthenticated);
-            if (isAuthenticated && userAddress) {
-                document.getElementById('walletStatus').innerHTML = `✅ Signed in as ${userAddress.slice(0,6)}...`;
-            }
-        }
-
-        // ========== INIT ==========
-
-        // Check if wallet is already connected on page load
-        window.addEventListener('load', async () => {
-            checkAuth();
-            loadPapers();
-        });
-
-        // Add a sign-in button if needed (optional)
-        // You can add a "Sign In" button in your nav if you want
+        window.addEventListener('load', loadPapers);
     </script>
 </body>
 </html>
