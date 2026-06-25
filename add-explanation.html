@@ -5,25 +5,146 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #f8f9fa; color: #1a1a1a; line-height: 1.6; }
-        .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e5e5; }
-        .logo { font-size: 1.5rem; font-weight: bold; color: #1a2a3a; text-decoration: none; }
-        nav a { margin-left: 1.5rem; text-decoration: none; color: #4a5568; }
-        nav a:hover { color: #1a2a3a; }
-        h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-        .subtitle { color: #4a5568; margin-bottom: 2rem; }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
-        .form-group input, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 4px; font-size: 1rem; font-family: inherit; }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #1a2a3a; }
-        .form-group textarea { min-height: 200px; resize: vertical; }
-        .btn { display: inline-block; background: #1a2a3a; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
-        .btn:hover { background: #2c3e50; }
-        .back-link { display: inline-block; margin-top: 1.5rem; color: #4a5568; text-decoration: none; }
-        .back-link:hover { text-decoration: underline; }
-        .footer { text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #e5e5e5; color: #6b7280; font-size: 0.8rem; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #f8f9fa;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1a2a3a;
+            text-decoration: none;
+        }
+
+        nav a {
+            margin-left: 1.5rem;
+            text-decoration: none;
+            color: #4a5568;
+        }
+
+        nav a:hover {
+            color: #1a2a3a;
+        }
+
+        .nav-btn {
+            display: inline-block;
+            background: #1a2a3a;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover {
+            background: #2c3e50;
+            color: white;
+        }
+
+        h1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: #1a2a3a;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            background: #2c3e50;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            background: #e5e5e5;
+            color: #1a1a1a;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e5e5;
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
+        #message {
+            margin-top: 1rem;
+            padding: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -31,9 +152,9 @@
         <header>
             <a href="/" class="logo">39 Quantum</a>
             <nav>
-                <a href="/">Explore</a>
-                <a href="/explanations.html">Explanations</a>
-                <a href="/add-explanation.html">Write Explanation</a>
+                <a href="/" class="nav-btn">Explore</a>
+                <a href="/explanations.html" class="nav-btn">Explanations</a>
+                <a href="/add-explanation.html" class="nav-btn">Write Explanation</a>
             </nav>
         </header>
 
@@ -42,27 +163,30 @@
 
         <form id="explanationForm">
             <div class="form-group">
-                <label for="title">Title of your explanation</label>
+                <label for="title">Title</label>
                 <input type="text" id="title" placeholder="e.g., A simple guide to quantum error correction" required>
             </div>
             <div class="form-group">
                 <label for="arxiv_id">arXiv ID</label>
                 <input type="text" id="arxiv_id" placeholder="e.g., 2405.12345">
-                <small style="color: #6b7280; font-size: 0.8rem;">Optional. The arXiv ID of the paper you're explaining.</small>
+                <small style="color: #6b7280;">Optional. The arXiv ID of the paper you're explaining.</small>
             </div>
             <div class="form-group">
-                <label for="content">Your explanation</label>
-                <textarea id="content" placeholder="Write your explanation here. Help others understand the paper." required></textarea>
+                <label for="content">Explanation</label>
+                <textarea id="content" rows="10" placeholder="Write your explanation here..." required></textarea>
             </div>
             <div class="form-group">
-                <label for="author">Your name</label>
+                <label for="author">Your Name</label>
                 <input type="text" id="author" placeholder="Anonymous">
-                <small style="color: #6b7280; font-size: 0.8rem;">Optional. This will be displayed with your explanation.</small>
+                <small style="color: #6b7280;">Optional. This will be displayed with your explanation.</small>
             </div>
-            <button type="submit" class="btn">Publish Explanation</button>
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn-primary">Publish Explanation</button>
+                <a href="/explanations.html" class="btn-secondary">Cancel</a>
+            </div>
         </form>
 
-        <a href="/explanations.html" class="back-link">← Back to Explanations</a>
+        <div id="message"></div>
 
         <div class="footer">
             <p>© 2026 39 Quantum · Read. Publish. Explain.</p>
@@ -70,51 +194,59 @@
     </div>
 
     <script>
-        document.getElementById('explanationForm').onsubmit = async function(e) {
+        document.getElementById('explanationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const data = {
-                title: document.getElementById('title').value,
-                arxiv_id: document.getElementById('arxiv_id').value,
-                content: document.getElementById('content').value,
-                author: document.getElementById('author').value || 'Anonymous'
-            };
+            const title = document.getElementById('title').value;
+            const arxiv_id = document.getElementById('arxiv_id').value;
+            const content = document.getElementById('content').value;
+            const author = document.getElementById('author').value || 'Anonymous';
 
-            if (!data.title || !data.content) {
-                alert('Please fill in the title and content.');
+            if (!title || !content) {
+                document.getElementById('message').innerHTML = '<p style="color: red;">❌ Title and content are required.</p>';
                 return;
             }
 
-            const submitBtn = this.querySelector('.btn');
+            const submitBtn = this.querySelector('button[type="submit"]');
             submitBtn.textContent = 'Publishing...';
             submitBtn.disabled = true;
 
             try {
                 const token = localStorage.getItem('session');
+
+                if (!token) {
+                    document.getElementById('message').innerHTML = '<p style="color: red;">❌ Please sign in first.</p>';
+                    submitBtn.textContent = 'Publish Explanation';
+                    submitBtn.disabled = false;
+                    return;
+                }
+
                 const response = await fetch('/api/explanations', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-    },
-    body: JSON.stringify(data)
-});
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ title, arxiv_id, content, author })
                 });
 
                 if (response.ok) {
-                    alert('  Explanation published successfully!');
-                    window.location.href = '/explanations.html';
+                    document.getElementById('message').innerHTML = '<p style="color: green;">✅ Explanation published!</p>';
+                    document.getElementById('explanationForm').reset();
+                    setTimeout(() => {
+                        window.location.href = '/explanations.html';
+                    }, 1500);
                 } else {
                     const error = await response.json();
-                    alert('  Failed to publish: ' + (error.error || 'Unknown error'));
+                    document.getElementById('message').innerHTML = '<p style="color: red;">❌ Failed: ' + (error.error || 'Unknown error') + '</p>';
                 }
             } catch (error) {
-                alert('  Error: ' + error.message);
+                document.getElementById('message').innerHTML = '<p style="color: red;">❌ Error: ' + error.message + '</p>';
             } finally {
                 submitBtn.textContent = 'Publish Explanation';
                 submitBtn.disabled = false;
             }
-        };
+        });
     </script>
 </body>
 </html>
