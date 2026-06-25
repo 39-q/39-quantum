@@ -305,6 +305,45 @@
             }
         }
 
+        // ========== CHECK AUTH ON LOAD ==========
+
+function checkAuthStatus() {
+    const isAuthenticated = localStorage.getItem('session') === 'authenticated';
+    const walletBtn = document.getElementById('connectWalletBtn');
+    const signInBtn = document.getElementById('signInBtn');
+    const statusDiv = document.getElementById('walletStatus');
+    
+    if (isAuthenticated && window.userAddress) {
+        // User is signed in
+        if (walletBtn) {
+            walletBtn.textContent = `✅ ${window.userAddress.slice(0,6)}...`;
+            walletBtn.disabled = true;
+        }
+        if (statusDiv) {
+            statusDiv.innerHTML = `✅ Signed in as ${window.userAddress.slice(0,6)}...`;
+        }
+        // Hide sign-in prompt if it exists
+        const signInPrompt = document.getElementById('signInPrompt');
+        if (signInPrompt) signInPrompt.style.display = 'none';
+        // Show publish buttons
+        document.querySelectorAll('.auth-required').forEach(el => {
+            el.style.display = 'inline-block';
+        });
+    } else if (window.userAddress) {
+        // Wallet connected, but not signed in
+        if (walletBtn) {
+            walletBtn.textContent = `✅ ${window.userAddress.slice(0,6)}...`;
+            walletBtn.disabled = true;
+        }
+        if (statusDiv) {
+            statusDiv.innerHTML = `🔗 Wallet connected. <button onclick="signInWithEthereum()">Sign In</button>`;
+        }
+    }
+}
+
+// Call this after wallet connects and on page load
+window.addEventListener('load', checkAuthStatus);
+
         // ========== LOAD PAPERS ==========
 
         const API_URL = '/api/research';
