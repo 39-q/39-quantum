@@ -364,6 +364,15 @@ app.get('/new-topic.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'new-topic.html'));
 });
 
+app.get('/explanation/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, 'explanation.html'));
+});
+
+// This handles query params like /explanation.html?id=123
+app.get('/explanation.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'explanation.html'));
+});
+
 // Topic routes - BOTH work
 app.get('/topic/:id', (req, res) => {
     res.sendFile(path.join(__dirname, 'topic.html'));
