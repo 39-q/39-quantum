@@ -43,10 +43,44 @@
     </div>
 
     <script>
-        const path = window.location.pathname;
-        const id = path.split('/').pop();
+        // ============ FIXED: Get ID from URL ============
+        // Works with both /explanation/123 AND /explanation.html?id=123
+        
+        function getExplanationId() {
+            // Check if we have a query parameter first
+            const params = new URLSearchParams(window.location.search);
+            const idFromParam = params.get('id');
+            
+            if (idFromParam) {
+                return idFromParam;
+            }
+            
+            // Otherwise, get it from the path like /explanation/123
+            const path = window.location.pathname;
+            const pathParts = path.split('/');
+            const lastPart = pathParts[pathParts.length - 1];
+            
+            // If it's "explanation.html", that's not an ID
+            if (lastPart === 'explanation.html' || lastPart === '') {
+                // If no ID found, show error
+                document.getElementById('explanationContent').innerHTML = `
+                    <h1>No Explanation ID</h1>
+                    <p>No explanation ID was provided in the URL.</p>
+                    <a href="/explanations.html" class="btn">← Back to Explanations</a>
+                `;
+                return null;
+            }
+            
+            return lastPart;
+        }
+
+        const id = getExplanationId();
 
         async function loadExplanation() {
+            if (!id) {
+                return; // Error already shown
+            }
+            
             try {
                 const response = await fetch(`/api/explanations/${id}`);
                 if (!response.ok) {
